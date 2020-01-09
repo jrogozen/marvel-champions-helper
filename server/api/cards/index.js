@@ -307,21 +307,36 @@ function writeStats(ctx, {
 }
 
 async function generate(req, res, next) {
+  const {
+    title = 'colossus',
+    description = 'wakanda forever',
+    attributes = 'x-man',
+    thw = 0,
+    atk = 3,
+    def = 4,
+    backgroundImagePath = path.resolve(appRootDir.get(), 'images/cards/colossus_bg.png'),
+    heroImagePath = path.resolve(appRootDir.get(), 'images/cards/colossus_hero.png'),
+    effect = 'Organic Steel - **Response:** After you change to this form, give Colossus a tough status card.',
+    handSize = 4,
+    hitPoints = 14,
+  } = req.body;
+
   const hero = new Hero({
-    title: 'colossus',
-    description: 'wakanda forever, dos',
-    backgroundImage: '',
-    attributes: ['x-man'],
+    title,
+    description,
+    backgroundImagePath,
+    heroImagePath,
+    attributes: attributes.split(','),
     type: 'hero',
     icon: '',
     setName: 'colossus',
     setPosition: 0,
-    thw: 0,
-    atk: 1,
-    def: 6,
-    effect: 'Organic Steel - **Response:** After you change to this form, give Colossus a tough status card.',
-    handSize: 4,
-    hitPoints: 13,
+    thw,
+    atk,
+    def,
+    effect,
+    handSize,
+    hitPoints,
   });
 
   const canvas = createCanvas(750, 1050);
@@ -349,11 +364,23 @@ async function generate(req, res, next) {
       fillStyle: 'black',
     }, hero.effect.split(' '), 100, 800, 775);
 
-    const targetPath = path.resolve(appRootDir.get(), 'cards', 'test.png');
 
-    await writePng(canvas, targetPath);
+    canvas.toBuffer((err, buf) => {
+      if (err) throw err; // encoding failed
 
-    res.send('ok');
+      res.writeHead(200, {
+        'Content-Type': 'image/png',
+        'Content-Length': buf.length,
+      });
+
+      res.end(buf);
+    });
+
+    // const targetPath = path.resolve(appRootDir.get(), 'cards', 'test.png');
+
+    // await writePng(canvas, targetPath);
+
+    // res.send('ok');
   } catch (error) {
     next(error);
   }
