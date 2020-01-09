@@ -306,6 +306,39 @@ function writeStats(ctx, {
   ctx.fillText(def, defDimensions.x, defDimensions.y);
 }
 
+// todo: edges should be tilted
+function drawHeroBox(ctx, colors = {}) {
+  ctx.strokeStyle = colors.left;
+
+  // [line] top left -> center divider
+  ctx.beginPath();
+  ctx.moveTo(23, 692);
+  ctx.lineTo(277, 692);
+  ctx.lineWidth = 6;
+  ctx.stroke();
+
+  // [corner] top left -> top of bottom
+  ctx.moveTo(24, 692);
+  ctx.lineTo(20, 698);
+  ctx.stroke();
+
+  // [line] top left -> bottom left
+  ctx.moveTo(20, 698);
+  ctx.lineTo(51, 988);
+  ctx.stroke();
+
+  // [corner] bottom left side -> bottom of left
+  ctx.moveTo(51, 987);
+  ctx.lineTo(57, 992);
+  ctx.stroke();
+
+  // [line] bottom left to center divider
+  ctx.lineWidth = 5;
+  ctx.moveTo(56, 991);
+  ctx.lineTo(158, 991);
+  ctx.stroke();
+}
+
 async function generate(req, res, next) {
   const {
     title = 'colossus',
@@ -319,6 +352,7 @@ async function generate(req, res, next) {
     effect = 'Organic Steel - **Response:** After you change to this form, give Colossus a tough status card.',
     handSize = 4,
     hitPoints = 14,
+    heroBoxLeftColor = 'blue',
   } = req.body;
 
   const hero = new Hero({
@@ -326,7 +360,7 @@ async function generate(req, res, next) {
     description,
     backgroundImagePath,
     heroImagePath,
-    attributes: attributes.split(','),
+    attributes,
     type: 'hero',
     icon: '',
     setName: 'colossus',
@@ -337,6 +371,7 @@ async function generate(req, res, next) {
     effect,
     handSize,
     hitPoints,
+    heroBoxLeftColor
   });
 
   const canvas = createCanvas(750, 1050);
@@ -364,6 +399,11 @@ async function generate(req, res, next) {
       fillStyle: 'black',
     }, hero.effect.split(' '), 100, 800, 775);
 
+    drawHeroBox(ctx, {
+      left: heroBoxLeftColor,
+      right: 'pink',
+      divider: 'black',
+    });
 
     canvas.toBuffer((err, buf) => {
       if (err) throw err; // encoding failed
@@ -388,6 +428,6 @@ async function generate(req, res, next) {
 
 // drawing lines info https://stackoverflow.com/questions/36211616/how-can-i-draw-a-diagonal-line-in-canvas-that-looks-the-same-in-safari-chrome
 
-router.get('/generate', generate);
+router.post('/generate', generate);
 
 module.exports = router;

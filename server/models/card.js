@@ -8,16 +8,16 @@ class Card {
       description,
 
       // <url>
-      backgroundImage,
+      backgroundImagePath,
 
       // ["x-man"]
-      attributes,
+      attributes = '',
 
       // "hero"
       type,
 
       // <url>
-      icon,
+      iconPath,
 
       // "colossus"
       setName,
@@ -26,14 +26,15 @@ class Card {
       setPosition,
     } = args;
 
-    this.title = title;
-    this.description = description;
-    this.backgroundImage = backgroundImage;
-    this.attributes = attributes;
-    this.type = type;
-    this.icon = icon;
-    this.setName = setName;
-    this.setPosition = setPosition;
+    // todo: apply sanitization on strings
+    this.title = String(title);
+    this.description = String(description);
+    this.backgroundImagePath = String(backgroundImagePath);
+    this.attributes = String(attributes).split(',');
+    this.type = String(type);
+    this.iconPath = String(iconPath);
+    this.setName = String(setName);
+    this.setPosition = String(setPosition);
   }
 }
 

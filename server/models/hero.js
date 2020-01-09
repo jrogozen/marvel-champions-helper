@@ -11,14 +11,21 @@ class Hero extends Card {
       effect,
       handSize,
       hitPoints,
+      heroImagePath,
+
+      // colorings
+      heroBoxLeftColor,
     } = args;
 
-    this.atk = atk;
-    this.thw = thw;
-    this.def = def;
-    this.effect = effect;
-    this.handSize = handSize;
-    this.hitPoints = hitPoints;
+    // todo: apply sanitization on strings
+    this.atk = Number(atk);
+    this.thw = Number(thw);
+    this.def = Number(def);
+    this.effect = String(effect);
+    this.handSize = Number(handSize);
+    this.hitPoints = Number(hitPoints);
+    this.heroImagePath = String(heroImagePath);
+    this.heroBoxLeftColor = String(heroBoxLeftColor);
   }
 }
 
