@@ -24,6 +24,10 @@ class Card {
 
       // "1"
       setPosition,
+
+      primaryColor,
+      secondaryColor,
+      tertiaryColor,
     } = args;
 
     // todo: apply sanitization on strings
@@ -35,6 +39,9 @@ class Card {
     this.iconPath = String(iconPath);
     this.setName = String(setName);
     this.setPosition = String(setPosition);
+    this.primaryColor = String(primaryColor);
+    this.secondaryColor = String(secondaryColor);
+    this.tertiaryColor = String(tertiaryColor);
   }
 }
 

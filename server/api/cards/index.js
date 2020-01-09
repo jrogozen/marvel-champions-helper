@@ -307,36 +307,55 @@ function writeStats(ctx, {
 }
 
 // todo: edges should be tilted
-function drawHeroBox(ctx, colors = {}) {
-  ctx.strokeStyle = colors.left;
+async function drawHeroBox(ctx, { left, divider, right }) {
 
-  // [line] top left -> center divider
-  ctx.beginPath();
-  ctx.moveTo(23, 692);
-  ctx.lineTo(277, 692);
-  ctx.lineWidth = 6;
-  ctx.stroke();
+    ctx.strokeStyle = left;
+    ctx.beginPath();
 
-  // [corner] top left -> top of bottom
-  ctx.moveTo(24, 692);
-  ctx.lineTo(20, 698);
-  ctx.stroke();
+    // [line] top left -> center divider
+    ctx.moveTo(23, 692);
+    ctx.lineTo(278, 692);
+    ctx.lineWidth = 6;
+    ctx.stroke();
 
-  // [line] top left -> bottom left
-  ctx.moveTo(20, 698);
-  ctx.lineTo(51, 988);
-  ctx.stroke();
+    // [corner] top left -> top of bottom
+    ctx.moveTo(24, 692);
+    ctx.lineTo(20, 698);
+    ctx.stroke();
 
-  // [corner] bottom left side -> bottom of left
-  ctx.moveTo(51, 987);
-  ctx.lineTo(57, 992);
-  ctx.stroke();
+    // [line] top left -> bottom left
+    ctx.moveTo(20, 698);
+    ctx.lineTo(51, 988);
+    ctx.stroke();
 
-  // [line] bottom left to center divider
-  ctx.lineWidth = 5;
-  ctx.moveTo(56, 991);
-  ctx.lineTo(158, 991);
-  ctx.stroke();
+    // [corner] bottom left side -> bottom of left
+    ctx.moveTo(51, 987);
+    ctx.lineTo(57, 992);
+    ctx.stroke();
+
+    // [line] bottom left to center divider
+    ctx.moveTo(56, 991);
+    ctx.lineTo(158, 991);
+    ctx.stroke();
+    ctx.closePath(); 
+
+
+    ctx.strokeStyle = divider;
+    ctx.beginPath();
+
+    // [line] divide bottom left and bottom right
+    ctx.moveTo(158, 991);
+    ctx.lineTo(184, 991);
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.strokeStyle = right;
+    ctx.beginPath();
+
+    // [line] bottom left of bottom right to bottom right of right
+    ctx.moveTo(185, 991);
+    ctx.lineTo(700, 991);
+    ctx.stroke();
 }
 
 async function generate(req, res, next) {
@@ -352,7 +371,9 @@ async function generate(req, res, next) {
     effect = 'Organic Steel - **Response:** After you change to this form, give Colossus a tough status card.',
     handSize = 4,
     hitPoints = 14,
-    heroBoxLeftColor = 'blue',
+    primaryColor = 'blue',
+    secondaryColor = 'red',
+    tertiaryColor = 'yellow',
   } = req.body;
 
   const hero = new Hero({
@@ -371,7 +392,9 @@ async function generate(req, res, next) {
     effect,
     handSize,
     hitPoints,
-    heroBoxLeftColor
+    primaryColor,
+    secondaryColor,
+    tertiaryColor,
   });
 
   const canvas = createCanvas(750, 1050);
@@ -400,9 +423,9 @@ async function generate(req, res, next) {
     }, hero.effect.split(' '), 100, 800, 775);
 
     drawHeroBox(ctx, {
-      left: heroBoxLeftColor,
-      right: 'pink',
-      divider: 'black',
+      left: hero.primaryColor,
+      right: hero.secondaryColor,
+      divider: hero.tertiaryColor,
     });
 
     canvas.toBuffer((err, buf) => {
