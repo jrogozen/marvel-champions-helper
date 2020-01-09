@@ -298,10 +298,10 @@ function writeStats(ctx, {
 
 async function generate(req, res, next) {
   const hero = new Hero({
-    title: 'el gato',
+    title: 'colossus',
     description: 'wakanda forever, dos',
     backgroundImage: '',
-    attributes: ['spanish', 'programmer'],
+    attributes: ['x-man'],
     type: 'hero',
     icon: '',
     setName: 'colossus',
@@ -309,7 +309,7 @@ async function generate(req, res, next) {
     thw: 0,
     atk: 1,
     def: 6,
-    effect: 'Organic Steel — **Response:** After you change to this form, give Colossus a tough status card.',
+    effect: 'Organic Steel - **Response:** After you change to this form, give Colossus a tough status card.',
     handSize: 4,
     hitPoints: 13,
   });
@@ -337,7 +337,7 @@ async function generate(req, res, next) {
     drawMultiLineText(ctx, {
       font: '33px "Blue Highway"',
       fillStyle: 'black',
-    }, hero.effect.split(' '), 100, 800, 825);
+    }, hero.effect.split(' '), 100, 800, 800);
 
     const targetPath = path.resolve(appRootDir.get(), 'cards', 'test.png');
 
