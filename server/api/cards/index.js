@@ -63,6 +63,16 @@ registerFont(
   },
 );
 
+registerFont(
+  path.resolve(
+    appRootDir.get(),
+    'fonts',
+    'big_noodle_titling.ttf',
+  ), {
+    family: 'Big Noodle Titling',
+  },
+);
+
 const router = express.Router();
 
 async function drawTemplateTop(ctx) {
@@ -337,7 +347,7 @@ async function generate(req, res, next) {
     drawMultiLineText(ctx, {
       font: '33px "Blue Highway"',
       fillStyle: 'black',
-    }, hero.effect.split(' '), 100, 800, 800);
+    }, hero.effect.split(' '), 100, 800, 775);
 
     const targetPath = path.resolve(appRootDir.get(), 'cards', 'test.png');
 
@@ -348,6 +358,8 @@ async function generate(req, res, next) {
     next(error);
   }
 }
+
+// drawing lines info https://stackoverflow.com/questions/36211616/how-can-i-draw-a-diagonal-line-in-canvas-that-looks-the-same-in-safari-chrome
 
 router.get('/generate', generate);
 
