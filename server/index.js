@@ -8,6 +8,7 @@ const setRequestId = require('./middleware/generic/setRequestId');
 const useRequestParsers = require('./middleware/generic/useRequestParsers');
 const useHttpLogger = require('./middleware/generic/useHttpLogger');
 const useErrorMiddleware = require('./middleware/errors');
+const cardsApi = require('./api/cards');
 
 const app = express();
 const logger = log.child({ name: 'root' });
@@ -26,6 +27,8 @@ app.use('/error', () => {
 
   throw err;
 });
+
+app.use('/api/v1/cards', cardsApi);
 
 useErrorMiddleware(app);
 

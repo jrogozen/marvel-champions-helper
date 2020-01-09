@@ -8,7 +8,7 @@ class Hero extends Card {
       atk,
       thw,
       def,
-      ability,
+      effect,
       handSize,
       hitPoints,
     } = args;
@@ -16,7 +16,7 @@ class Hero extends Card {
     this.atk = atk;
     this.thw = thw;
     this.def = def;
-    this.ability = ability;
+    this.effect = effect;
     this.handSize = handSize;
     this.hitPoints = hitPoints;
   }
