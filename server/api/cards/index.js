@@ -400,7 +400,7 @@ function drawHeroBox(ctx, { left, divider, right }) {
 
   // [line] top left -> center divider
   ctx.moveTo(23, 692);
-  ctx.lineTo(278, 692);
+  ctx.lineTo(279, 692);
   ctx.stroke();
 
   // [corner] top left -> top of bottom
@@ -429,7 +429,7 @@ function drawHeroBox(ctx, { left, divider, right }) {
   ctx.beginPath();
 
   // [line] divide bottom left and bottom right
-  ctx.moveTo(158, 991);
+  ctx.moveTo(157, 991);
   ctx.lineTo(184, 991);
   ctx.stroke();
 
