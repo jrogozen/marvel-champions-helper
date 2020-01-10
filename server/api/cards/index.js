@@ -578,6 +578,7 @@ function drawFlavorText(ctx, text, x, y) {
   ctx.fillText(`"${text}"`, x, y);
 }
 
+
 async function generate(req, res, next) {
   const {
     author = 'decktool.app',
@@ -697,27 +698,94 @@ async function generate(req, res, next) {
 
 /**
  * @swagger
- *
- * /login:
- *   post:
- *     description: Login to the application
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: username
- *         description: Username to use for login.
- *         in: formData
- *         required: true
- *         type: string
- *       - name: password
- *         description: User's password.
- *         in: formData
- *         required: true
- *         type: string
- *     responses:
- *       200:
- *         description: login
+ * tags:
+ *  name: marvel-champions
+ *  description: marvel champions lcg
  */
-router.post('/generate', generate);
+
+/**
+ * @swagger
+ *  components:
+ *    schemas:
+ *      ServerError:
+ *        type: object
+ *        properties:
+ *          success:
+ *            type: boolean
+ *          error:
+ *            type: string
+ *        example:
+ *          success: false
+ *          error: could not complete API request
+ *      MarvelChampionsHeroCard:
+ *        type: object
+ *        required:
+ *          - title
+ *          - attributes
+ *          - thw
+ *          - atk
+ *          - def
+ *        properties:
+ *          title:
+ *            type: string
+ *            description: title of the card
+ *          author:
+ *            type: string
+ *            description: creator of the card
+ *            default: decktool.app
+ *          flavorText:
+ *            type: string
+ *            description: hero quote, or message to add as flavor text
+ *          attributes:
+ *            type: string
+ *            description: comma separated list of hero attributes
+ *          thw:
+ *            type: number
+ *            description: hero thw value
+ *          atk:
+ *            type: number
+ *            description: hero atk value
+ *          def:
+ *            type: number
+ *            description: hero def value
+ *        example:
+ *          title: colossus
+ *          flavorText: The White Wolf.
+ *          attributes: x-man,human
+ *          atk: 2
+ *          thw: 1
+ *          def: 3
+ */
+
+/**
+ * @swagger
+ * path:
+ *  /api/v1/marvel-champions/cards:
+ *    post:
+ *      summary: create a new marvel champions card
+ *      tags: [marvel-champions]
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#components/schemas/MarvelChampionsHeroCard'
+ *      responses:
+ *        200:
+ *          description: ok
+ *          content:
+ *            image/*:
+ *              schema:
+ *                type: string
+ *                format: binary
+ *        500:
+ *          description: not ok
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#components/schemas/ServerError'
+ */
+
+router.post('/', generate);
 
 module.exports = router;

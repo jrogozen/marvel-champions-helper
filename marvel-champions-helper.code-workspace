@@ -7,6 +7,9 @@
     "settings": {
         "editor.tabSize": 2,
         "editor.detectIndentation": false,
-        "eslint.autoFixOnSave": true
+        "eslint.autoFixOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": true
+        }
     }
 }

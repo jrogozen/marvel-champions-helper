@@ -5,10 +5,12 @@ const swaggerUi = require('swagger-ui-express');
 
 const options = {
   definition: {
+    openapi: '3.0.0',
     info: {
-      title: 'hello world',
-      version: '1.0.0',
+      title: 'decktool.app',
+      version: '0.0.1',
     },
+    components: {},
   },
   apis: [`${path.resolve(appRootDir.get(), 'server')}/**/*.js`],
 };

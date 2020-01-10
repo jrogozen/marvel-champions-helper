@@ -14,15 +14,13 @@ const cardsApi = require('./api/cards');
 
 const app = express();
 
-
 useRequestParsers(app);
 setRequestId(app);
 secureRequest(app);
 useHttpLogger(app);
 useSwagger(app);
 
-
-app.use('/api/v1/cards', cardsApi);
+app.use('/api/v1/marvel-champions/cards', cardsApi);
 
 // health
 app.use('/check', (req, res) => res.send('ok check!'));
