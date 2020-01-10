@@ -307,55 +307,165 @@ function writeStats(ctx, {
 }
 
 // todo: edges should be tilted
-async function drawHeroBox(ctx, { left, divider, right }) {
+function drawHeaderBox(ctx, { left, divider, right }) {
+  // todo: store widths as vars
+  ctx.lineWidth = 4;
 
-    ctx.strokeStyle = left;
-    ctx.beginPath();
+  // write left
+  // top left corner to top divider
+  ctx.strokeStyle = left;
+  ctx.beginPath();
 
-    // [line] top left -> center divider
-    ctx.moveTo(23, 692);
-    ctx.lineTo(278, 692);
-    ctx.lineWidth = 6;
-    ctx.stroke();
+  ctx.moveTo(30, 33);
+  ctx.lineTo(523, 33);
+  ctx.stroke();
 
-    // [corner] top left -> top of bottom
-    ctx.moveTo(24, 692);
-    ctx.lineTo(20, 698);
-    ctx.stroke();
+  // top left corner to bottom left corner
+  ctx.moveTo(30, 33);
+  ctx.lineTo(40, 107);
+  ctx.stroke();
 
-    // [line] top left -> bottom left
-    ctx.moveTo(20, 698);
-    ctx.lineTo(51, 988);
-    ctx.stroke();
+  // bottom left corner to bottom divider
+  ctx.moveTo(40, 105);
+  ctx.lineTo(495, 104);
+  ctx.stroke();
+  ctx.closePath();
 
-    // [corner] bottom left side -> bottom of left
-    ctx.moveTo(51, 987);
-    ctx.lineTo(57, 992);
-    ctx.stroke();
+  // write divider
+  ctx.strokeStyle = divider;
+  ctx.beginPath();
 
-    // [line] bottom left to center divider
-    ctx.moveTo(56, 991);
-    ctx.lineTo(158, 991);
-    ctx.stroke();
-    ctx.closePath(); 
+  // top divider
+  ctx.moveTo(523, 33);
+  ctx.lineTo(550, 34);
+  ctx.stroke();
 
+  // bottom divider
+  ctx.moveTo(495, 104);
+  ctx.lineTo(522, 104);
+  ctx.stroke();
+  ctx.closePath();
 
-    ctx.strokeStyle = divider;
-    ctx.beginPath();
+  // write right
+  ctx.strokeStyle = right;
+  ctx.beginPath();
 
-    // [line] divide bottom left and bottom right
-    ctx.moveTo(158, 991);
-    ctx.lineTo(184, 991);
-    ctx.stroke();
-    ctx.closePath();
+  // top divider to top right
+  ctx.moveTo(550, 34);
+  ctx.lineTo(719, 34);
+  ctx.stroke();
 
-    ctx.strokeStyle = right;
-    ctx.beginPath();
+  // top right corner to bottom right corner
+  ctx.moveTo(718, 34);
+  ctx.lineTo(709, 105);
+  ctx.stroke();
 
-    // [line] bottom left of bottom right to bottom right of right
-    ctx.moveTo(185, 991);
-    ctx.lineTo(700, 991);
-    ctx.stroke();
+  // bottom right corner to bottom divider
+  ctx.moveTo(709, 105);
+  ctx.lineTo(522, 104);
+  ctx.stroke();
+
+  ctx.closePath();
+}
+
+// todo: edges should be tilted
+function drawHeroBox(ctx, { left, divider, right }) {
+  // todo: store widths as vars
+  ctx.lineWidth = 6;
+
+  // write left
+  ctx.strokeStyle = left;
+  ctx.beginPath();
+
+  // [line] top left -> center divider
+  ctx.moveTo(23, 692);
+  ctx.lineTo(278, 692);
+  ctx.stroke();
+
+  // [corner] top left -> top of bottom
+  ctx.moveTo(24, 692);
+  ctx.lineTo(20, 698);
+  ctx.stroke();
+
+  // [line] top left -> bottom left
+  ctx.moveTo(20, 698);
+  ctx.lineTo(51, 988);
+  ctx.stroke();
+
+  // [corner] bottom left side -> bottom of left
+  ctx.moveTo(51, 987);
+  ctx.lineTo(57, 992);
+  ctx.stroke();
+
+  // [line] bottom left to center divider
+  ctx.moveTo(56, 991);
+  ctx.lineTo(158, 991);
+  ctx.stroke();
+  ctx.closePath(); 
+
+  // write dividers
+  ctx.strokeStyle = divider;
+  ctx.beginPath();
+
+  // [line] divide bottom left and bottom right
+  ctx.moveTo(158, 991);
+  ctx.lineTo(184, 991);
+  ctx.stroke();
+
+  // [line] divider to right
+  ctx.moveTo(279, 692);
+  ctx.lineTo(304, 692);
+  ctx.stroke();
+  ctx.closePath();
+
+  // write right
+  ctx.strokeStyle = right;
+  ctx.beginPath();
+
+  // [line] divider to right
+  ctx.moveTo(304, 692);
+  ctx.lineTo(723, 692);
+  ctx.stroke();
+
+  // [corner] top right to right
+  ctx.moveTo(723, 692);
+  ctx.lineTo(728, 695);
+  ctx.stroke();
+
+  // todo: FINISH [line] top right to bottom right
+  ctx.moveTo(728, 694);
+  ctx.lineTo(697, 991);
+  ctx.stroke();
+
+  // todo: FINISH [line] bottom left of bottom right to bottom right of right
+  ctx.moveTo(185, 991);
+  ctx.lineTo(720, 991);
+  ctx.stroke();
+  ctx.closePath();
+}
+
+function drawBottomOverlay(ctx, { left, divider, right }) {
+  // draw left
+  drawRotatedRect(ctx, -52, 867, 225, 200, 24, left);
+
+  // draw divider
+
+  // draw right
+}
+
+function drawRotatedRect(ctx, x, y, width, height, degrees, color) {
+  ctx.fillStyle = 'rgba(0,0,0,0.4)';
+
+  ctx.save();
+  ctx.beginPath();
+
+  // move center point to middle of rect
+  ctx.translate(x + width / 2, y + height / 2);
+  ctx.rotate(degrees * Math.PI / 180);
+  ctx.rect(-width/2, -height/2, width, height);
+  ctx.fill();
+  ctx.closePath();
+  ctx.restore();
 }
 
 async function generate(req, res, next) {
@@ -400,13 +510,19 @@ async function generate(req, res, next) {
   const canvas = createCanvas(750, 1050);
   const ctx = canvas.getContext('2d');
 
+  const colors = {
+    left: hero.primaryColor,
+    right: hero.secondaryColor,
+    divider: hero.tertiaryColor,
+  };
+
   try {
     // bg first (lowest prio)
-    await drawBackground(ctx, path.resolve(appRootDir.get(), 'images/cards/colossus_bg.png'));
+    // await drawBackground(ctx, path.resolve(appRootDir.get(), 'images/cards/colossus_bg.png'));
 
     await drawTemplateTop(ctx);
     await drawTitle(ctx, hero.title);
-    await drawHero(ctx, path.resolve(appRootDir.get(), 'images/cards/colossus_hero.png'));
+    // await drawHero(ctx, path.resolve(appRootDir.get(), 'images/cards/colossus_hero.png'));
     await drawTemplateBottom(ctx);
 
     writeStats(ctx, {
@@ -422,11 +538,9 @@ async function generate(req, res, next) {
       fillStyle: 'black',
     }, hero.effect.split(' '), 100, 800, 775);
 
-    drawHeroBox(ctx, {
-      left: hero.primaryColor,
-      right: hero.secondaryColor,
-      divider: hero.tertiaryColor,
-    });
+    drawHeaderBox(ctx, colors);
+    drawHeroBox(ctx, colors);
+    drawBottomOverlay(ctx, colors);
 
     canvas.toBuffer((err, buf) => {
       if (err) throw err; // encoding failed
