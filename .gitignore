@@ -8,3 +8,4 @@ functions/server/*
 functions/shared/*
 **/.DS_STORE
 .DS_STORE
+.firebase/*

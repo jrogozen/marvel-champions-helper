@@ -695,8 +695,29 @@ async function generate(req, res, next) {
   }
 }
 
-// drawing lines info https://stackoverflow.com/questions/36211616/how-can-i-draw-a-diagonal-line-in-canvas-that-looks-the-same-in-safari-chrome
-
+/**
+ * @swagger
+ *
+ * /login:
+ *   post:
+ *     description: Login to the application
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: username
+ *         description: Username to use for login.
+ *         in: formData
+ *         required: true
+ *         type: string
+ *       - name: password
+ *         description: User's password.
+ *         in: formData
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: login
+ */
 router.post('/generate', generate);
 
 module.exports = router;

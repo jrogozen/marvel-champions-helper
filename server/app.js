@@ -1,5 +1,6 @@
 const express = require('express');
 
+
 require('../tools/loadEnv');
 require('./utils/log');
 const augmentError = require('./utils/augmentError');
@@ -8,16 +9,19 @@ const setRequestId = require('./middleware/generic/setRequestId');
 const useRequestParsers = require('./middleware/generic/useRequestParsers');
 const useHttpLogger = require('./middleware/generic/useHttpLogger');
 const useErrorMiddleware = require('./middleware/errors');
+const useSwagger = require('./middleware/swagger');
 const cardsApi = require('./api/cards');
 
 const app = express();
+
 
 useRequestParsers(app);
 setRequestId(app);
 secureRequest(app);
 useHttpLogger(app);
+useSwagger(app);
 
-// api
+
 app.use('/api/v1/cards', cardsApi);
 
 // health
