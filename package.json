@@ -6,7 +6,7 @@
   "scripts": {
     "copy": "rsync -av --progress server images tools fonts functions",
     "predeploy": "npm run copy && cd functions && npm i",
-    "deploy": "firebase deploy --only functions",
+    "deploy": "firebase deploy",
     "dev": "nodemon --inspect ./server",
     "start": "node server",
     "test": "echo \"Error: no test specified\" && exit 1"

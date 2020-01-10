@@ -17,7 +17,12 @@ setRequestId(app);
 secureRequest(app);
 useHttpLogger(app);
 
-app.use('/check', (req, res) => res.send('ok'));
+// api
+app.use('/api/v1/cards', cardsApi);
+
+// health
+app.use('/check', (req, res) => res.send('ok check!'));
+app.use('/', (req, res) => res.send('ok!'));
 
 app.use('/error', () => {
   const err = new Error('what!');
@@ -27,7 +32,6 @@ app.use('/error', () => {
   throw err;
 });
 
-app.use('/api/v1/cards', cardsApi);
 
 useErrorMiddleware(app);
 
