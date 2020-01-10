@@ -1,4 +1,10 @@
 node_modules
 tools/env/*
-functions/*
+functions/tools/*
+functions/fonts/*
+functions/images*
+functions/client/*
+functions/server/*
+functions/shared/*
+**/.DS_STORE
 .DS_STORE

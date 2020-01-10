@@ -12,6 +12,8 @@ class Hero extends Card {
       handSize,
       hitPoints,
       heroImagePath,
+      splashColor,
+      splashIconPath,
     } = args;
 
     // todo: apply sanitization on strings
@@ -22,6 +24,8 @@ class Hero extends Card {
     this.handSize = Number(handSize);
     this.hitPoints = Number(hitPoints);
     this.heroImagePath = String(heroImagePath);
+    this.splashColor = String(splashColor);
+    this.splashIconPath = String(splashIconPath);
   }
 }
 

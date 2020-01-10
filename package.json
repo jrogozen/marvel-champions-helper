@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "copy": "rsync -av --progress server client images tools fonts functions",
+    "copy": "rsync -av --progress server images tools fonts functions",
     "predeploy": "npm run copy && cd functions && npm i",
     "deploy": "firebase deploy --only functions",
     "dev": "nodemon --inspect ./server",
