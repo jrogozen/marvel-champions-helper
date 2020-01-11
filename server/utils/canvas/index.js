@@ -1,4 +1,5 @@
 const http = require('http');
+const https = require('https');
 const isUndefined = require('lodash/isUndefined');
 const url = require('url');
 const sizeOf = require('image-size');
@@ -173,7 +174,10 @@ class Canvas {
           image: buff,
         });
       } else if (path.substring(0, 4).toLowerCase() === 'http') {
-        http.get(url.parse(path), (response) => {
+        const u = url.parse(path);
+        const protocol = (u.protocol === 'https:' ? https : http);
+
+        protocol.get(u, (response) => {
           const chunks = [];
 
           response
@@ -238,12 +242,13 @@ class Canvas {
   }) {
     const { ctx } = this;
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => {
         ctx.drawImage(img, x, y, width, height);
         resolve();
       };
+      img.onerror = (err) => reject(err);
       img.src = buffer;
     });
   }
