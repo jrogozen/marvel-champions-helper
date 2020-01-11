@@ -1,7 +1,6 @@
 const appRootDir = require('app-root-dir');
 const path = require('path');
 const express = require('express');
-const fs = require('fs');
 const sizeOf = require('image-size');
 const {
   registerFont,
@@ -11,87 +10,6 @@ const {
 
 const Hero = require('../../models/hero');
 
-
-// fonts
-registerFont(
-  path.resolve(
-    appRootDir.get(),
-    'fonts',
-    'iron_and_brine.ttf',
-  ), {
-    family: 'Iron & Brine',
-  },
-);
-
-registerFont(
-  path.resolve(
-    appRootDir.get(),
-    'fonts',
-    'comic_book_bold.otf',
-  ), {
-    family: 'Comic Book',
-  },
-);
-
-registerFont(
-  path.resolve(
-    appRootDir.get(),
-    'fonts',
-    'blue_highway.ttf',
-  ), {
-    family: 'Blue Highway',
-  },
-);
-
-registerFont(
-  path.resolve(
-    appRootDir.get(),
-    'fonts',
-    'blue_highway_bold.ttf',
-  ), {
-    family: 'Blue Highway Bold',
-  },
-);
-
-registerFont(
-  path.resolve(
-    appRootDir.get(),
-    'fonts',
-    'blue_highway_italic.ttf',
-  ), {
-    family: 'Blue Highway Italic',
-  },
-);
-
-registerFont(
-  path.resolve(
-    appRootDir.get(),
-    'fonts',
-    'big_noodle_titling.ttf',
-  ), {
-    family: 'Big Noodle Titling',
-  },
-);
-
-registerFont(
-  path.resolve(
-    appRootDir.get(),
-    'fonts',
-    'bravo_sc.otf',
-  ), {
-    family: 'Bravo SC',
-  },
-);
-
-registerFont(
-  path.resolve(
-    appRootDir.get(),
-    'fonts',
-    'sf_wonder_comic_italic.ttf',
-  ), {
-    family: 'SF Wonder Comic Italic',
-  },
-);
 
 const router = express.Router();
 
@@ -156,110 +74,11 @@ async function drawAttributes(ctx, attributes = []) {
   ctx.fillText(attributesString, 372, 733);
 }
 
-async function writePng(canvas, targetPath) {
-  return new Promise((resolve) => {
-    const out = fs.createWriteStream(targetPath);
-    const stream = canvas.createPNGStream();
-    stream.pipe(out);
-    out.on('finish', () => {
-      resolve();
-    });
-  });
-}
-
 async function drawHero(ctx, imagePath) {
   const heroImagePath = imagePath;
   const heroImage = await loadImage(heroImagePath);
 
   ctx.drawImage(heroImage, 0, 0, 750, 1050);
-}
-
-function drawStyledText(ctx, font, word, x, y) {
-  const wordToWrite = word.replace(/\*/g, '');
-
-  let wrote = false;
-
-  // really shallow markdown matching
-  // only supports ** for now
-  // BUG: *(s) must be the last chars of the word for this parsing to work
-  if (word[0] === '*' && word[1] === '*') {
-    ctx.font = `${font.substring(0, font.length - 1)} Bold"`;
-    ctx.fillText(wordToWrite, x, y);
-    wrote = true;
-  }
-  // else if (word[0] === '*') {
-  //   ctx.font = `${font.substring(0, font.length - 1)} Italic"`;
-  //   ctx.fillText(wordToWrite, x, y);
-  //   wrote = true;
-  // }
-
-  if (word[word.length - 1] === '*' && word[word.length - 2] === '*') {
-    if (!wrote) {
-      ctx.fillText(wordToWrite, x, y);
-      wrote = true;
-    }
-    ctx.font = font.replace(/ Bold/, '');
-  }
-  // else if (word[word.length - 1] === '*') {
-  //   if (!wrote) {
-  //     ctx.fillText(wordToWrite, x, y);
-  //     wrote = true;
-  //   }
-  //   ctx.font = font.replace(/ Italic/, '');
-  // }
-
-  if (!wrote) {
-    ctx.fillText(wordToWrite, x, y);
-  }
-}
-
-function drawMultiLineText(ctx, fontOptions, wordsArray, startingX, startingY, maxWidth) {
-  ctx.font = fontOptions.font;
-  ctx.textAlign = 'left';
-  ctx.fillStyle = fontOptions.fillStyle;
-
-  const guessedCharacterWidth = ctx.measureText('M').width;
-  const wordSpacing = guessedCharacterWidth * 0.58;
-  const heightSpacing = guessedCharacterWidth * 1.5;
-  const y = startingY;
-
-  let x = startingX;
-
-  if (!wordsArray.length) {
-    return heightSpacing;
-  }
-
-  let summedWidth = 0;
-  let lastWordIndex = 0;
-
-  for (let i = 0; i < wordsArray.length; i++) {
-    const word = wordsArray[i];
-
-    if (summedWidth + (word.length * guessedCharacterWidth) > maxWidth) {
-      // not enough space to add this word
-      break;
-    } else {
-      summedWidth += (word.length * guessedCharacterWidth);
-      lastWordIndex += 1;
-    }
-  }
-
-  for (let i = 0; i < lastWordIndex; i++) {
-    const word = wordsArray[i];
-
-    drawStyledText(ctx, ctx.font, word, x, y);
-
-    x += (wordSpacing + ctx.measureText(word.replace(/\*/g, '')).width);
-  }
-
-  return drawMultiLineText(
-    ctx,
-    fontOptions,
-    wordsArray.slice(lastWordIndex),
-    startingX,
-    y + heightSpacing,
-    maxWidth,
-  ) + heightSpacing;
 }
 
 async function drawBackground(ctx, imagePath) {
@@ -470,20 +289,6 @@ function drawHeroBox(ctx, { left, divider, right }) {
   ctx.closePath();
 }
 
-function drawRotatedRect(ctx, x, y, width, height, degrees, color) {
-  ctx.fillStyle = color;
-
-  ctx.save();
-  ctx.beginPath();
-
-  // move center point to middle of rect
-  ctx.translate(x + width / 2, y + height / 2);
-  ctx.rotate((degrees * Math.PI) / 180);
-  ctx.rect(-width / 2, -height / 2, width, height);
-  ctx.fill();
-  ctx.closePath();
-  ctx.restore();
-}
 
 function drawHandSizeAndHitpoints(ctx, { handSize, hitPoints }) {
   ctx.font = '26.3px "Big Noodle Titling"';
@@ -588,8 +393,8 @@ async function generate(req, res, next) {
     thw = 0,
     atk = 3,
     def = 4,
-    backgroundImagePath = path.resolve(appRootDir.get(), 'images/cards/colossus_bg.png'),
-    heroImagePath = path.resolve(appRootDir.get(), 'images/cards/colossus_hero.png'),
+    backgroundImage,
+    heroImage,
     effect = 'Organic Steel - **Response:** After you change to this form, give Colossus a tough status card.',
     handSize = 4,
     hitPoints = 14,
@@ -599,18 +404,18 @@ async function generate(req, res, next) {
     splashColor,
     setName,
     setPosition,
-    splashIconPath,
+    splashIcon,
   } = req.body;
 
   const hero = new Hero({
     author,
     title,
     flavorText,
-    backgroundImagePath,
-    heroImagePath,
+    backgroundImagePath: path.resolve(appRootDir.get(), 'images/cards/colossus_bg.png'),
+    heroImagePath: path.resolve(appRootDir.get(), 'images/cards/colossus_hero.png'),
     attributes,
     type: 'hero',
-    splashIconPath,
+    splashIconPath: path.resolve(appRootDir.get(), 'images/cards/colossus_splash.png'),
     setName,
     setPosition,
     thw,
@@ -635,13 +440,21 @@ async function generate(req, res, next) {
   };
 
   try {
-    // bg first (lowest prio)
-    await drawBackground(ctx, path.resolve(appRootDir.get(), 'images/cards/colossus_bg.png'));
-    drawBottomOverlay(ctx, colors);
-    await drawTemplateTop(ctx);
+    // if (hero.backgroundImagePath) {
+    //   await drawBackground(ctx, hero.backgroundImagePath);
+    // }
+
+    // drawBottomOverlay(ctx, colors);
+
+    // await drawTemplateTop(ctx);
+
     await drawTitle(ctx, hero.title);
     drawHeaderBox(ctx, colors);
-    await drawHero(ctx, path.resolve(appRootDir.get(), 'images/cards/colossus_hero.png'));
+
+    if (hero.heroImagePath) {
+      await drawHero(ctx, hero.heroImagePath);
+    }
+
     await drawTemplateBottom(ctx);
 
     writeStats(ctx, {
@@ -670,10 +483,11 @@ async function generate(req, res, next) {
 
     drawFlavorText(ctx, hero.flavorText, 100, heightOfEffect + 792);
 
-    drawSplashBackground(ctx, hero.splashColor);
-    await drawSplashOutline(ctx);
-    await drawSplashIcon(ctx, path.resolve(appRootDir.get(), 'images/cards/colossus_splash.png'));
-
+    if (hero.splashIconPath) {
+      drawSplashBackground(ctx, hero.splashColor);
+      await drawSplashOutline(ctx);
+      await drawSplashIcon(ctx, hero.splashIconPath);
+    }
 
     canvas.toBuffer((err, buf) => {
       if (err) throw err; // encoding failed
@@ -685,12 +499,6 @@ async function generate(req, res, next) {
 
       res.end(buf);
     });
-
-    // const targetPath = path.resolve(appRootDir.get(), 'cards', 'test.png');
-
-    // await writePng(canvas, targetPath);
-
-    // res.send('ok');
   } catch (error) {
     next(error);
   }
@@ -725,6 +533,9 @@ async function generate(req, res, next) {
  *          - thw
  *          - atk
  *          - def
+ *          - effect
+ *          - handSize
+ *          - hitPoints
  *        properties:
  *          title:
  *            type: string
@@ -748,6 +559,33 @@ async function generate(req, res, next) {
  *          def:
  *            type: number
  *            description: hero def value
+ *          effect:
+ *            type: string
+ *            description: unique card effect
+ *          handSize:
+ *            type: number
+ *            description: maximum hand size for hero
+ *          hitPoints:
+ *            type: number
+ *            description: maximum hit points for hero
+ *          primaryColor:
+ *            type: string
+ *            description: primary color of card. supports rgba, hex, or web color
+ *          secondaryColor:
+ *            type: string
+ *            description: secondary color of card. supports rgba, hex, or web color
+ *          tertiaryColor:
+ *            type: string
+ *            description: tertiary color of card. supports rgba, hex, or web color
+ *          splashIcon:
+ *            type: string
+ *            description: splash icon located in bottom right of the card
+ *          heroImage:
+ *            type: string
+ *            description: main hero image
+ *          backgroundImage:
+ *            type: string
+ *            description: background image for card
  *        example:
  *          title: colossus
  *          flavorText: The White Wolf.
@@ -755,6 +593,12 @@ async function generate(req, res, next) {
  *          atk: 2
  *          thw: 1
  *          def: 3
+ *          effect: Organic Steel - **Response:** After you change to this form, give Colossus a tough status card.
+ *          handSize: 4
+ *          hitPoints: 14
+ *          primaryColor: red
+ *          secondaryColor: gray
+ *          tertiaryColor: yellow
  */
 
 /**
