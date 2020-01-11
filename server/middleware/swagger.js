@@ -9,6 +9,7 @@ const options = {
     info: {
       title: 'decktool.app',
       version: '0.0.1',
+      description: 'api for deck builder card games',
     },
     components: {},
   },
@@ -17,6 +18,7 @@ const options = {
 
 function useSwagger(app) {
   const swaggerSpec = swaggerJSDoc(options);
+
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 }
 

@@ -10,7 +10,7 @@ const useRequestParsers = require('./middleware/generic/useRequestParsers');
 const useHttpLogger = require('./middleware/generic/useHttpLogger');
 const useErrorMiddleware = require('./middleware/errors');
 const useSwagger = require('./middleware/swagger');
-const cardsApi = require('./api/cards');
+const marvelCardsApi = require('./api/cards/marvel');
 
 const app = express();
 
@@ -20,7 +20,7 @@ secureRequest(app);
 useHttpLogger(app);
 useSwagger(app);
 
-app.use('/api/v1/marvel-champions/cards', cardsApi);
+app.use('/api/v1/marvel-champions/cards', marvelCardsApi);
 
 // health
 app.use('/check', (req, res) => res.send('ok check!'));
