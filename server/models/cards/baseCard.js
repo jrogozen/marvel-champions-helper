@@ -7,14 +7,12 @@ class BaseCard extends Model {
 
     const {
       title,
-      type,
-      author,
+      author = 'decktool.app',
       illustrator,
       deckUrl,
     } = args;
 
-    this.title = String(title);
-    this.type = String(type);
+    this.title = Model.string(title);
     this.meta = new CardMetaData({
       author,
       illustrator,

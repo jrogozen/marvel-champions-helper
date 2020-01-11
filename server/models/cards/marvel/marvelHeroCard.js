@@ -24,32 +24,35 @@ class MarvelHeroCard extends BaseCard {
       title,
     } = args;
 
-    this.setName = String(setName);
-    this.title = String(title);
+    this.type = MarvelHeroCard.TYPE;
+    this.setName = BaseCard.string(setName);
+    this.title = BaseCard.string(title);
     this.media = {
-      backgroundImagePath: String(backgroundImagePath),
-      heroImagePath: String(heroImagePath),
-      splashIconPath: String(splashIconPath),
+      backgroundImagePath: BaseCard.string(backgroundImagePath),
+      heroImagePath: BaseCard.string(heroImagePath),
+      splashIconPath: BaseCard.string(splashIconPath),
     };
     this.colors = {
-      primary: String(primaryColor),
-      secondary: String(secondaryColor),
-      splashColor: String(splashColor),
-      tertiaryColor: String(tertiaryColor),
+      primary: BaseCard.string(primaryColor),
+      secondary: BaseCard.string(secondaryColor),
+      splash: BaseCard.string(splashColor),
+      tertiary: BaseCard.string(tertiaryColor),
     };
     this.stats = {
-      atk: Number(atk),
-      def: Number(def),
-      handSize: Number(handSize),
-      hitPoints: Number(hitPoints),
-      thw: Number(thw),
+      atk: BaseCard.number(atk),
+      def: BaseCard.number(def),
+      handSize: BaseCard.number(handSize),
+      hitPoints: BaseCard.number(hitPoints),
+      thw: BaseCard.number(thw),
     };
     this.text = {
-      attributes: String(attributes),
-      effect: String(effect),
-      flavorText: String(flavorText),
+      attributes: BaseCard.string(attributes),
+      effect: BaseCard.string(effect),
+      flavorText: BaseCard.string(flavorText),
     };
   }
 }
+
+MarvelHeroCard.TYPE = 'MARVEL_HERO_CARD';
 
 module.exports = MarvelHeroCard;

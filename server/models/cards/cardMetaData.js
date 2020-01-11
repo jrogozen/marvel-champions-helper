@@ -10,9 +10,9 @@ class CardMetaData extends Model {
       deckUrl,
     } = args;
 
-    this.author = String(author);
-    this.illustrator = String(illustrator);
-    this.deckUrl = String(deckUrl);
+    this.author = Model.string(author);
+    this.illustrator = Model.string(illustrator);
+    this.deckUrl = Model.string(deckUrl);
   }
 }
 

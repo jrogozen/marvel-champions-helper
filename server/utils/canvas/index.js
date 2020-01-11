@@ -5,6 +5,7 @@ const sizeOf = require('image-size');
 const {
   createCanvas,
   loadImage,
+  Image,
 } = require('canvas');
 
 const fonts = require('./fonts');
@@ -62,6 +63,8 @@ class Canvas {
   }) {
     const { ctx } = this;
 
+    logger.debug({ startX, startY, text });
+
     if (!Array.isArray(text)) {
       throw new Error('text must be an array');
     }
@@ -78,7 +81,7 @@ class Canvas {
 
     let x = startX;
     let currentLineWidth = 0;
-    let lastUsedWordIndex = -1;
+    let lastUsedWordIndex = 0;
 
     if (text.length <= 0) {
       return heightSpacing;
@@ -91,7 +94,7 @@ class Canvas {
       const wordWidth = word.replace(/\*/g, '').length * guessSingleCharacterDimensions.width;
 
       if (currentLineWidth + wordWidth > maxWidth) {
-        logger.debug({ text, word, maxWidth }, 'word=%s would push line over maxWidth. breaking loop');
+        logger.debug({ text, word, maxWidth }, 'word=%s would push line over maxWidth. breaking loop', word);
         break;
       } else {
         currentLineWidth += (word.length * guessSingleCharacterDimensions.width);
@@ -113,9 +116,9 @@ class Canvas {
     return this.fillMultiLineText({
       font,
       fillStyle,
-      text: text.slice(lastUsedWordIndex - 1),
-      x,
-      y,
+      text: text.slice(lastUsedWordIndex),
+      startX,
+      startY: y + heightSpacing,
       maxWidth,
     }) + heightSpacing;
   }
@@ -156,6 +159,95 @@ class Canvas {
     ctx.restore();
   }
 
+  static async getImageWithDimensions(path) {
+    return new Promise((resolve) => {
+      if (path.substring(0, 10).toLowerCase() === 'data:image') {
+        const buff = Buffer.from(
+          path.replace(/^data:image\/(png|gif|jpeg);base64,/, ''),
+          'base64',
+        );
+        const dimensions = sizeOf(buff);
+
+        resolve({
+          dimensions,
+          image: buff,
+        });
+      } else if (path.substring(0, 4).toLowerCase() === 'http') {
+        http.get(url.parse(path), (response) => {
+          const chunks = [];
+
+          response
+            .on('data', (chunk) => chunks.push(chunk))
+            .on('end', async () => {
+              const buff = Buffer.concat(chunks);
+              const dimensions = sizeOf(buff);
+
+              resolve({
+                dimensions,
+                image: buff,
+              });
+            });
+        });
+      } else {
+        loadImage(path)
+          .then((image) => {
+            const dimensions = sizeOf(path);
+
+            resolve({
+              dimensions,
+              image,
+            });
+          });
+      }
+    });
+  }
+
+  static getModifiedDimensions({
+    dimensions,
+    height,
+    maxHeight,
+    maxWidth,
+    width,
+  }) {
+    if (!width || !height) {
+      height = dimensions.height;
+      width = dimensions.width;
+    }
+
+    if (
+      (maxWidth && (dimensions.width > maxWidth))
+      || (maxHeight && (dimensions.height > maxHeight))
+    ) {
+      const ratio = Math.min(maxWidth / dimensions.width);
+      width = dimensions.width * ratio;
+      height = dimensions.height * ratio;
+    }
+
+    return {
+      height,
+      width,
+    };
+  }
+
+  async drawBuffer({
+    buffer,
+    height,
+    width,
+    x,
+    y,
+  }) {
+    const { ctx } = this;
+
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, x, y, width, height);
+        resolve();
+      };
+      img.src = buffer;
+    });
+  }
+
   // x and y refer to top left corner of image
   async insertImage({
     path,
@@ -163,45 +255,31 @@ class Canvas {
     y,
     width,
     height,
+    maxHeight,
+    maxWidth,
   }) {
     const { ctx } = this;
 
-    // if the path is a bas64 string, we can just insert it
-    if (path.substring(0, 10).toLowerCase() === 'data:image') {
-      const image = new Image();
+    const { image, dimensions } = await Canvas.getImageWithDimensions(path);
 
-      image.onload = () => {
-        const dimensions = sizeOf(image);
+    const modifiedDimensions = Canvas.getModifiedDimensions({
+      dimensions,
+      maxWidth,
+      maxHeight,
+      width,
+      height,
+    });
 
-        ctx.drawImage(image, x, y, dimensions.width, dimensions.height);
-      };
-
-      image.src = path;
-    } else if (path.substring(0, 4).toLowerCase() === 'http') {
-      http.get(url.parse(path), (response) => {
-        const chunks = [];
-
-        response
-          .on('data', (chunk) => chunks.push(chunk))
-          .on('end', async () => {
-            const b = Buffer.concat(chunks);
-            const dimensions = sizeOf(b);
-
-            const image = await loadImage(path);
-
-            // todo: prob can just draw the buffer here
-            ctx.drawImage(image, x, y, dimensions.width, dimensions.height);
-          });
+    if (Buffer.isBuffer(image)) {
+      await this.drawBuffer({
+        buffer: image,
+        height: modifiedDimensions.height,
+        width: modifiedDimensions.width,
+        x,
+        y,
       });
-    } else if (!width || !height) {
-      const image = await loadImage(path);
-      const dimensions = sizeOf(path);
-
-      ctx.drawImage(image, x, y, dimensions, width, dimensions.height);
     } else {
-      const image = await loadImage(path);
-
-      ctx.drawImage(image, x, y, width, height);
+      ctx.drawImage(image, x, y, modifiedDimensions.width, modifiedDimensions.height);
     }
   }
 }
