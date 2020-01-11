@@ -1,38 +1,53 @@
+/* eslint-disable new-cap */
 const express = require('express');
 
+const MarvelAllyCard = require('../../../models/cards/marvel/marvelAllyCard');
+const MarvelAllyTemplate = require('../../../templates/marvel/marvelAllyTemplate');
 const MarvelHeroCard = require('../../../models/cards/marvel/marvelHeroCard');
 const MarvelHeroTemplate = require('../../../templates/marvel/marvelHeroTemplate');
 
 const router = express.Router();
 
-async function generate(req, res, next) {
-  try {
-    const card = new MarvelHeroCard(req.body);
-    const template = new MarvelHeroTemplate({
-      card,
-    });
+const templateMap = {
+  ally: {
+    card: MarvelAllyCard,
+    template: MarvelAllyTemplate,
+  },
+  hero: {
+    card: MarvelHeroCard,
+    template: MarvelHeroTemplate,
+  },
+};
 
-    await template.draw();
+function generate(type) {
+  return async (req, res, next) => {
+    try {
+      const card = new templateMap[type].card(req.body);
+      const template = new templateMap[type].template({ card });
 
-    template.canvas.canvas.toBuffer((err, buf) => {
-      if (err) throw err;
+      await template.draw();
 
-      res.writeHead(200, {
-        'Content-Type': 'image/png',
-        'Content-Length': buf.length,
+      template.canvas.canvas.toBuffer((err, buf) => {
+        if (err) throw err;
+
+        res.writeHead(200, {
+          'Content-Type': 'image/png',
+          'Content-Length': buf.length,
+        });
+
+        res.end(buf);
       });
-
-      res.end(buf);
-    });
-  } catch (error) {
-    next(error);
-  }
+    } catch (error) {
+      next(error);
+    }
+  };
 }
+
 
 /**
  * @swagger
  * path:
- *  /api/v1/marvel-champions/cards:
+ *  /api/v1/marvel-champions/cards/hero:
  *    post:
  *      summary: create a new marvel champions card
  *      tags: [marvel-champions]
@@ -57,6 +72,8 @@ async function generate(req, res, next) {
  *              schema:
  *                $ref: '#components/schemas/ServerError'
  */
-router.post('/', generate);
+router.post('/hero', generate('hero'));
+
+router.post('/ally', generate('ally'));
 
 module.exports = router;
