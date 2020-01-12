@@ -96,8 +96,8 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     ctx.lineWidth = 4;
 
     // write left
-    ctx.strokeStyle = card.colors.primary;
     ctx.beginPath();
+    ctx.strokeStyle = card.colors.primary;
 
     // top left corner to top divider
     ctx.moveTo(topLeftCornerX, topLineY);
@@ -116,8 +116,8 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     ctx.closePath();
 
     // // write divider
-    ctx.strokeStyle = card.colors.tertiary;
     ctx.beginPath();
+    ctx.strokeStyle = card.colors.tertiary;
 
     // // top divider
     ctx.moveTo(505, topLineY);
@@ -131,8 +131,8 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     ctx.closePath();
 
     // // write right
-    ctx.strokeStyle = card.colors.secondary;
     ctx.beginPath();
+    ctx.strokeStyle = card.colors.secondary;
 
     // // top divider to top right
     ctx.moveTo(528, topLineY);
@@ -227,7 +227,7 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     ctx.font = '33px "Comic Book"';
     ctx.textAlign = 'center';
     ctx.fillStyle = 'black';
-    ctx.fillText(attributesString, 372, 733);
+    ctx.fillText(attributesString, 372, 700);
   }
 
   async drawTitle() {
@@ -303,8 +303,165 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     });
   }
 
+  drawFlavorText(heightOfEffectText) {
+    const {
+      canvas,
+      card,
+    } = this;
+    const { ctx } = canvas;
+
+    ctx.font = '23px "SF Wonder Comic Italic"';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'black';
+
+    canvas.fillMultiLineText({
+      fillStyle: 'black',
+      font: '23px "SF Wonder Comic Italic"',
+      maxWidth: 600,
+      startX: 100,
+      startY: heightOfEffectText + 760,
+      text: card.text.flavorText.split(' '),
+    });
+  }
+
+  drawHeroBoxBorders() {
+    const {
+      canvas,
+      card,
+    } = this;
+    const { ctx } = canvas;
+    const topLeftCornerX = 20;
+    const topLeftCornerY = 663;
+    const bottomLeftCornerY = 988;
+
+    ctx.lineWidth = 6;
+
+    // write left
+    ctx.beginPath();
+    ctx.strokeStyle = card.colors.primary;
+
+    // top left corner to top divider
+    ctx.moveTo(topLeftCornerX + 4, topLeftCornerY - 2);
+    ctx.lineTo(280, topLeftCornerY - 2);
+    ctx.stroke();
+
+    // top left corner
+    ctx.moveTo(topLeftCornerX - 1, topLeftCornerY + 1);
+    ctx.lineTo(topLeftCornerX + 2, topLeftCornerY - 2);
+    ctx.stroke();
+    ctx.moveTo(topLeftCornerX + 2, topLeftCornerY - 2);
+    ctx.lineTo(topLeftCornerX + 3, topLeftCornerY - 3);
+    ctx.stroke();
+    ctx.moveTo(topLeftCornerX + 3, topLeftCornerY - 3);
+    ctx.lineTo(topLeftCornerX + 4, topLeftCornerY - 2);
+    ctx.stroke();
+
+    // top left corner to bottom left corner
+    ctx.moveTo(topLeftCornerX, topLeftCornerY);
+    ctx.lineTo(topLeftCornerX, bottomLeftCornerY);
+    ctx.stroke();
+
+    // bottom left corner
+    ctx.moveTo(topLeftCornerX - 1, bottomLeftCornerY - 1);
+    ctx.lineTo(topLeftCornerX + 2, bottomLeftCornerY + 2);
+    ctx.stroke();
+
+    ctx.moveTo(topLeftCornerX - 1, bottomLeftCornerY);
+    ctx.lineTo(topLeftCornerX + 4, bottomLeftCornerY + 4);
+    ctx.stroke();
+
+    // bottom left corner to bottom divider
+    ctx.moveTo(topLeftCornerX + 3, bottomLeftCornerY + 4);
+    ctx.lineTo(156, bottomLeftCornerY + 4);
+    ctx.stroke();
+    ctx.closePath();
+
+    // write divider
+    ctx.beginPath();
+    ctx.strokeStyle = card.colors.tertiary;
+
+    // bottom
+    ctx.moveTo(157, bottomLeftCornerY + 4);
+    ctx.lineTo(183, bottomLeftCornerY + 4);
+    ctx.stroke();
+
+    // top
+    ctx.moveTo(281, topLeftCornerY - 2);
+    ctx.lineTo(305, topLeftCornerY - 2);
+    ctx.stroke();
+    ctx.closePath();
+
+    // write right
+    ctx.beginPath();
+    ctx.strokeStyle = card.colors.secondary;
+
+    // bottom divider to right corner
+    ctx.moveTo(184, bottomLeftCornerY + 4);
+    ctx.lineTo(727, bottomLeftCornerY + 4);
+    ctx.stroke();
+    ctx.closePath();
+
+    // // [corner] bottom left side -> bottom of left
+    // ctx.moveTo(51, 987);
+    // ctx.lineTo(57, 992);
+    // ctx.stroke();
+
+    // // [line] bottom left to center divider
+    // ctx.moveTo(56, 991);
+    // ctx.lineTo(158, 991);
+    // ctx.stroke();
+    // ctx.closePath();
+
+    ctx.closePath();
+
+    // // write dividers
+    // ctx.strokeStyle = card.colors.tertiary;
+    // ctx.beginPath();
+
+    // // [line] divide bottom left and bottom right
+    // ctx.moveTo(157, 991);
+    // ctx.lineTo(184, 991);
+    // ctx.stroke();
+
+    // // [line] divider to right
+    // ctx.moveTo(279, 692);
+    // ctx.lineTo(304, 692);
+    // ctx.stroke();
+    // ctx.closePath();
+
+    // // write right
+    // ctx.strokeStyle = card.colors.secondary;
+    // ctx.beginPath();
+
+    // // [line] divider to right
+    // ctx.moveTo(304, 692);
+    // ctx.lineTo(724, 692);
+    // ctx.stroke();
+
+    // // [corner] top right to right
+    // ctx.moveTo(723, 692);
+    // ctx.lineTo(728, 695);
+    // ctx.stroke();
+
+    // // [line] top right to bottom right
+    // ctx.moveTo(728, 694);
+    // ctx.lineTo(697, 989);
+    // ctx.stroke();
+
+    // // [line] bottom left of bottom right to bottom right of right
+    // ctx.moveTo(185, 991);
+    // ctx.lineTo(692, 991);
+    // ctx.stroke();
+
+    // // [corner] bottom right corner
+    // ctx.moveTo(691, 991);
+    // ctx.lineTo(697, 988);
+    // ctx.stroke();
+    // ctx.closePath();
+  }
+
   /**
-  todo: consequential damage
+  todo: consequential damage, cost
    */
 
   async draw() {
@@ -318,19 +475,19 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     this.drawAttributes();
     await this.drawTitle();
 
-    // const heightOfEffectText = this.canvas.fillMultiLineText({
-    //   fillStyle: 'black',
-    //   font: '33px "Blue Highway"',
-    //   maxWidth: 775,
-    //   startX: 100,
-    //   startY: 800,
-    //   text: this.card.text.effect.split(' '),
-    // });
+    const heightOfEffectText = this.canvas.fillMultiLineText({
+      fillStyle: 'black',
+      font: '33px "Blue Highway"',
+      maxWidth: 765,
+      startX: 100,
+      startY: 760,
+      text: this.card.text.effect.split(' '),
+    });
 
-    // this.drawHeroBoxBorders();
+    this.drawHeroBoxBorders();
     // this.drawHandSizeAndHitpoints();
     // this.drawAuthor();
-    // this.drawFlavorText(heightOfEffectText);
+    this.drawFlavorText(heightOfEffectText);
     // await this.drawSplash();
   }
 }
