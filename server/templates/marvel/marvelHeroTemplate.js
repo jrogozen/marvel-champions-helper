@@ -2,41 +2,32 @@ const appRootDir = require('app-root-dir');
 const path = require('path');
 
 const Canvas = require('../../utils/canvas');
+const MarvelBaseTemplate = require('./marvelBaseTemplate');
 
-class MarvelHeroTemplate {
+class MarvelHeroTemplate extends MarvelBaseTemplate {
   constructor(args) {
-    const {
-      card,
-    } = args;
-
-    this.card = card;
-    this.width = 750;
-    this.height = 1050;
-    this.canvas = new Canvas({ width: this.width, height: this.height });
-    this.templateImages = {
-      bottom: path.resolve(appRootDir.get(), 'server/templates/marvel/images/hero_template_bottom.png'),
-      splash: path.resolve(appRootDir.get(), 'server/templates/marvel/images/hero_template_splash.png'),
-      top: path.resolve(appRootDir.get(), 'server/templates/marvel/images/hero_template_top.png'),
-      symbols: {
-        unique: path.resolve(appRootDir.get(), 'server/templates/marvel/images', 'symbol_unique.png'),
+    super({
+      ...args,
+      templateImages: {
+        bottom: {
+          height: 415,
+          path: path.resolve(appRootDir.get(), 'server/templates/marvel/images/hero_template_bottom.png'),
+          width: 750,
+        },
+        splash: {
+          height: 233,
+          path: path.resolve(appRootDir.get(), 'server/templates/marvel/images/hero_template_splash.png'),
+          width: 230,
+        },
+        top: {
+          height: 635,
+          path: path.resolve(appRootDir.get(), 'server/templates/marvel/images/hero_template_top.png'),
+          width: 750,
+        },
       },
-    };
-  }
-
-  static formatStatValue(num) {
-    const str = String(num);
-
-    return str.replace(/0/g, 'o');
-  }
-
-  async drawBackgroundImage() {
-    if (this.card.media.backgroundImagePath) {
-      await this.canvas.insertImage({
-        path: this.card.media.backgroundImagePath,
-        x: 0,
-        y: 0,
-      });
-    }
+      width: 750,
+      height: 1050,
+    });
   }
 
   drawBottomOverlay() {
@@ -78,22 +69,6 @@ class MarvelHeroTemplate {
     });
   }
 
-  async drawTemplateTop() {
-    const {
-      canvas,
-      templateImages,
-      width,
-    } = this;
-
-    await canvas.insertImage({
-      height: 635,
-      path: templateImages.top,
-      width,
-      x: 0,
-      y: 0,
-    });
-  }
-
   async drawTitle() {
     const {
       card,
@@ -117,7 +92,7 @@ class MarvelHeroTemplate {
 
     await canvas.insertImage({
       height: 37,
-      path: templateImages.symbols.unique,
+      path: templateImages.symbols.unique.path,
       width: 29,
       x: leftPositionOfSymbolUnique,
       y: 50,
@@ -204,23 +179,6 @@ class MarvelHeroTemplate {
     }
   }
 
-  async drawTemplateBottom() {
-    const {
-      canvas,
-      templateImages,
-      width,
-    } = this;
-
-    await canvas.insertImage({
-      height: 415,
-      path: templateImages.bottom,
-      width,
-      x: 0,
-      y: 635,
-    });
-  }
-
-
   drawStats() {
     const {
       canvas,
@@ -236,9 +194,9 @@ class MarvelHeroTemplate {
     const shadowXDiff = 6;
     const shadowYDiff = 5;
 
-    const thw = MarvelHeroTemplate.formatStatValue(card.stats.thw);
-    const atk = MarvelHeroTemplate.formatStatValue(card.stats.atk);
-    const def = MarvelHeroTemplate.formatStatValue(card.stats.def);
+    const thw = MarvelBaseTemplate.formatStatValue(card.stats.thw);
+    const atk = MarvelBaseTemplate.formatStatValue(card.stats.atk);
+    const def = MarvelBaseTemplate.formatStatValue(card.stats.def);
 
     const thwDimensions = {
       x: 75,
@@ -276,6 +234,10 @@ class MarvelHeroTemplate {
       card,
     } = this;
     const { ctx } = canvas;
+
+    if (!card.text.attributes) {
+      return;
+    }
 
     const formattedAttributes = card.text.attributes.split(',').map((attr) => {
       const str = [];
@@ -440,7 +402,7 @@ class MarvelHeroTemplate {
       return;
     }
 
-    ctx.fillStyle = card.colors.splash || cards.colors.primary;
+    ctx.fillStyle = card.colors.splash || card.colors.primary;
 
     // background
     ctx.beginPath();
@@ -465,7 +427,7 @@ class MarvelHeroTemplate {
     // outline
     await canvas.insertImage({
       height: 233,
-      path: this.templateImages.splash,
+      path: this.templateImages.splash.path,
       width: 230,
       x: 624,
       y: 912,

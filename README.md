@@ -27,3 +27,9 @@
 
 ### known wishlist
 - [ ] * modifiers on stat values 
+- [ ] rounded borders for cards
+- [ ] gradients for colorings
+- [ ] node canvas x values don't seem accurate for pathing left to right
+- [ ] add some custom letter spacing on canvas text (probably replace filltext completely)
+- [ ] support markdown for text fields (or a subset)
+- [ ] titling on hero card, first letter should be larger than remaining letters (copy ally)
