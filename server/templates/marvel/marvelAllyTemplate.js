@@ -84,12 +84,97 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     }
   }
 
+
+  drawTopOverlay() {
+    const { canvas, card } = this;
+    const { ctx } = canvas;
+
+    ctx.strokeStyle = card.colors.primary;
+    ctx.lineWidth = 4;
+
+    // draw cost background
+    canvas.fillRect({
+      fillStyle: card.colors.primary,
+      height: 140,
+      width: 140,
+      x: 0,
+      y: 0,
+    });
+    if (card.belongsToHero) {
+      // left
+      canvas.fillRect({
+        fillStyle: card.colors.primary,
+        height: 74,
+        width: 372,
+        x: 140,
+        y: 0,
+      });
+
+      // left diagnal
+      canvas.fillRect({
+        fillStyle: card.colors.primary,
+        height: 125,
+        rotationDegree: 20,
+        width: 20,
+        x: 490,
+        y: -10,
+      });
+
+      // divider
+      canvas.fillRect({
+        fillStyle: card.colors.tertiary,
+        height: 125,
+        rotationDegree: 20,
+        width: 20,
+        x: 510,
+        y: -10,
+      });
+
+      // right
+      canvas.fillRect({
+        fillStyle: card.colors.secondary,
+        height: 125,
+        rotationDegree: 20,
+        width: 20,
+        x: 527,
+        y: 0,
+      });
+
+      canvas.fillRect({
+        fillStyle: card.colors.secondary,
+        height: 74,
+        width: 400,
+        x: 550,
+        y: 0,
+      });
+    } else {
+      // left corner
+      ctx.beginPath();
+      ctx.lineWidth = 4;
+      ctx.moveTo(136, 30);
+      ctx.lineTo(142, 0);
+      ctx.stroke();
+      ctx.lineTo(138, 30);
+      ctx.stroke();
+      ctx.closePath();
+
+      // main rect
+      canvas.fillRect({
+        fillStyle: card.colors.primary,
+        height: 74,
+        width: 650,
+        x: 140,
+        y: 0,
+      });
+    }
+  }
+
   drawHeaderBoxBorders() {
     const { canvas, card } = this;
     const { ctx } = canvas;
     const topLineY = 34;
     const topLeftCornerX = 142;
-    const topRightCornerX = 745;
+    const topRightCornerX = 718;
     const bottomLeftCornerX = 122;
     const bottomLeftCornerY = 129;
 
@@ -120,13 +205,13 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     ctx.strokeStyle = card.colors.tertiary;
 
     // // top divider
-    ctx.moveTo(505, topLineY);
-    ctx.lineTo(527, topLineY);
+    ctx.moveTo(504, topLineY);
+    ctx.lineTo(528, topLineY);
     ctx.stroke();
 
     // // bottom divider
-    ctx.moveTo(467, bottomLeftCornerY - 1);
-    ctx.lineTo(489, bottomLeftCornerY - 1);
+    ctx.moveTo(466, bottomLeftCornerY - 1);
+    ctx.lineTo(490, bottomLeftCornerY - 1);
     ctx.stroke();
     ctx.closePath();
 
@@ -141,11 +226,11 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
 
     // // top right corner to bottom right corner
     ctx.moveTo(topRightCornerX - 1, topLineY);
-    ctx.lineTo(730, bottomLeftCornerY - 1);
+    ctx.lineTo(706, bottomLeftCornerY - 1);
     ctx.stroke();
 
     // // bottom right corner to bottom divider
-    ctx.moveTo(730, bottomLeftCornerY - 1);
+    ctx.moveTo(706, bottomLeftCornerY - 1);
     ctx.lineTo(489, bottomLeftCornerY - 1);
     ctx.stroke();
     ctx.closePath();
@@ -260,7 +345,7 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
 
     // middle point of headerbox
     // bottom left corner and top right corner X of headerBox
-    const middlePoint = 122 + ((745 - 122) / 2);
+    const middlePoint = 122 + ((718 - 122) / 2);
     const leftX = middlePoint - (totalWidth / 2);
     const leftXforLetters = leftX
       + templateImages.symbols.unique.width
@@ -372,7 +457,7 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
 
     // bottom left corner to bottom divider
     ctx.moveTo(topLeftCornerX + 3, bottomLeftCornerY + 4);
-    ctx.lineTo(156, bottomLeftCornerY + 4);
+    ctx.lineTo(157, bottomLeftCornerY + 4);
     ctx.stroke();
     ctx.closePath();
 
@@ -382,12 +467,12 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
 
     // bottom
     ctx.moveTo(157, bottomLeftCornerY + 4);
-    ctx.lineTo(183, bottomLeftCornerY + 4);
+    ctx.lineTo(184, bottomLeftCornerY + 4);
     ctx.stroke();
 
     // top
-    ctx.moveTo(281, topLeftCornerY - 2);
-    ctx.lineTo(305, topLeftCornerY - 2);
+    ctx.moveTo(280, topLeftCornerY - 2);
+    ctx.lineTo(306, topLeftCornerY - 2);
     ctx.stroke();
     ctx.closePath();
 
@@ -401,63 +486,99 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     ctx.stroke();
     ctx.closePath();
 
-    // // [corner] bottom left side -> bottom of left
-    // ctx.moveTo(51, 987);
-    // ctx.lineTo(57, 992);
-    // ctx.stroke();
+    // bottom right corner to top right corner
+    ctx.moveTo(730, bottomLeftCornerY - 2);
+    ctx.lineTo(730, topLeftCornerY + 4);
+    ctx.stroke();
 
-    // // [line] bottom left to center divider
-    // ctx.moveTo(56, 991);
-    // ctx.lineTo(158, 991);
-    // ctx.stroke();
-    // ctx.closePath();
+    // bottom right corner
+    ctx.moveTo(731, bottomLeftCornerY - 4);
+    ctx.lineTo(729, bottomLeftCornerY);
+    ctx.stroke();
+    ctx.lineTo(728, bottomLeftCornerY + 2);
+    ctx.stroke();
+    ctx.lineTo(726, bottomLeftCornerY + 4);
+    ctx.stroke();
 
+    // top right corner
+    ctx.moveTo(731, topLeftCornerY + 5);
+    ctx.lineTo(726, topLeftCornerY - 2);
+    ctx.lineTo(727, topLeftCornerY - 2);
+
+    // top right corner to right side of health
+    ctx.lineTo(685, topLeftCornerY - 2);
+    ctx.stroke();
+
+    // left side of health to top divider
+    ctx.moveTo(306, topLeftCornerY - 2);
+    ctx.lineTo(579, topLeftCornerY - 2);
+    ctx.stroke();
     ctx.closePath();
+  }
 
-    // // write dividers
-    // ctx.strokeStyle = card.colors.tertiary;
-    // ctx.beginPath();
+  drawHealth() {
+    const { canvas, card } = this;
+    const { ctx } = canvas;
 
-    // // [line] divide bottom left and bottom right
-    // ctx.moveTo(157, 991);
-    // ctx.lineTo(184, 991);
-    // ctx.stroke();
+    ctx.font = '92px "Comic Book"';
+    ctx.textAlign = 'center';
 
-    // // [line] divider to right
-    // ctx.moveTo(279, 692);
-    // ctx.lineTo(304, 692);
-    // ctx.stroke();
-    // ctx.closePath();
+    canvas.fillShadowText({
+      text: MarvelAllyTemplate.formatStatValue(card.stats.health),
+      x: 630,
+      y: 692,
+      shadowXDiff: 6,
+      shadowYDiff: 5,
+    });
+  }
 
-    // // write right
-    // ctx.strokeStyle = card.colors.secondary;
-    // ctx.beginPath();
+  drawCost() {
+    const { canvas, card } = this;
+    const { ctx } = canvas;
 
-    // // [line] divider to right
-    // ctx.moveTo(304, 692);
-    // ctx.lineTo(724, 692);
-    // ctx.stroke();
+    ctx.font = '92px "Comic Book"';
+    ctx.textAlign = 'center';
 
-    // // [corner] top right to right
-    // ctx.moveTo(723, 692);
-    // ctx.lineTo(728, 695);
-    // ctx.stroke();
+    canvas.fillShadowText({
+      text: MarvelAllyTemplate.formatStatValue(card.stats.cost),
+      x: 64,
+      y: 100,
+      shadowXDiff: 6,
+      shadowYDiff: 5,
+    });
+  }
 
-    // // [line] top right to bottom right
-    // ctx.moveTo(728, 694);
-    // ctx.lineTo(697, 989);
-    // ctx.stroke();
+  async drawAllyImage() {
+    const {
+      canvas,
+      card,
+    } = this;
 
-    // // [line] bottom left of bottom right to bottom right of right
-    // ctx.moveTo(185, 991);
-    // ctx.lineTo(692, 991);
-    // ctx.stroke();
+    if (card.media.allyImagePath) {
+      await canvas.insertImage({
+        height: this.height,
+        path: card.media.allyImagePath,
+        width: this.width,
+        x: 0,
+        y: 0,
+      });
+    }
+  }
 
-    // // [corner] bottom right corner
-    // ctx.moveTo(691, 991);
-    // ctx.lineTo(697, 988);
-    // ctx.stroke();
-    // ctx.closePath();
+  drawSetNamePosition() {
+    const { canvas, card } = this;
+    const { ctx } = canvas;
+
+    ctx.font = '26.3px "Big Noodle Titling"';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'white';
+
+    if (card.belongsToHero) {
+      ctx.fillText(`${card.setName}  ( ${card.setPosition} )`, 346, 1023);
+    } else {
+      ctx.textAlign = 'right';
+      ctx.fillText(card.setName, 732, 1023);
+    }
   }
 
   /**
@@ -466,11 +587,17 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
 
   async draw() {
     await this.drawBackgroundImage();
-    this.drawBottomOverlay();
+
+    this.drawTopOverlay();
     await this.drawTemplateTop();
     this.drawHeaderBoxBorders();
-    await this.drawHeroImage();
+
+    // ally overlaps top but under bottom
+    await this.drawAllyImage();
+    this.drawBottomOverlay();
     await this.drawTemplateBottom();
+    this.drawCost();
+    this.drawHealth();
     this.drawStats();
     this.drawAttributes();
     await this.drawTitle();
@@ -488,7 +615,8 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     // this.drawHandSizeAndHitpoints();
     // this.drawAuthor();
     this.drawFlavorText(heightOfEffectText);
-    // await this.drawSplash();
+    this.drawSetNamePosition();
+    await this.drawSplash();
   }
 }
 
