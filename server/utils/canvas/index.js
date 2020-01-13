@@ -124,13 +124,32 @@ class Canvas {
     }) + heightSpacing;
   }
 
-  fillRect({
+  fillShadowText({
+    shadowXDiff,
+    shadowYDiff,
+    text,
     x,
     y,
-    width,
+  }) {
+    const { ctx } = this;
+
+    ctx.lineWidth = 8;
+    ctx.strokeStyle = 'black';
+    ctx.fillStyle = 'black';
+    ctx.fillText(text, x + shadowXDiff, y + shadowYDiff);
+
+    ctx.fillStyle = 'white';
+    ctx.strokeText(text, x, y);
+    ctx.fillText(text, x, y);
+  }
+
+  fillRect({
+    fillStyle,
     height,
     rotationDegree,
-    fillStyle,
+    width,
+    x,
+    y,
   }) {
     const { ctx } = this;
 
