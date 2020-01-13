@@ -5,6 +5,8 @@ const MarvelAllyCard = require('../../../models/cards/marvel/marvelAllyCard');
 const MarvelAllyTemplate = require('../../../templates/marvel/marvelAllyTemplate');
 const MarvelHeroCard = require('../../../models/cards/marvel/marvelHeroCard');
 const MarvelHeroTemplate = require('../../../templates/marvel/marvelHeroTemplate');
+const MarvelUpgradeCard = require('../../../models/cards/marvel/marvelUpgradeCard');
+const MarvelUpgradeTemplate = require('../../../templates/marvel/marvelUpgradeTemplate');
 
 const router = express.Router();
 
@@ -16,6 +18,10 @@ const templateMap = {
   hero: {
     card: MarvelHeroCard,
     template: MarvelHeroTemplate,
+  },
+  upgrade: {
+    card: MarvelUpgradeCard,
+    template: MarvelUpgradeTemplate,
   },
 };
 
@@ -42,7 +48,6 @@ function generate(type) {
     }
   };
 }
-
 
 /**
  * @swagger
@@ -103,5 +108,7 @@ router.post('/hero', generate('hero'));
  *                $ref: '#components/schemas/ServerError'
  */
 router.post('/ally', generate('ally'));
+
+router.post('/upgrade', generate('upgrade'));
 
 module.exports = router;

@@ -1,6 +1,6 @@
-const BaseCard = require('../baseCard');
+const BaseMarvelCard = require('./baseMarvelCard');
 
-class MarvelAllyCard extends BaseCard {
+class MarvelAllyCard extends BaseMarvelCard {
   constructor(args) {
     super(args);
 
@@ -14,45 +14,28 @@ class MarvelAllyCard extends BaseCard {
       effect,
       flavorText,
       health,
-      primaryColor,
-      resources,
-      secondaryColor,
-
-      // can be leadership/protection/aggression/justice/basic OR belong to a hero
-      setName,
-      setPosition,
-      splashColor,
+      resources = '',
       splashIconPath,
       subtitle,
-      tertiaryColor,
       thw,
       thwConsequence,
       title,
     } = args;
 
     this.type = MarvelAllyCard.TYPE;
-    this.setName = BaseCard.string(setName);
-    this.setPosition = BaseCard.string(setPosition);
-    this.title = BaseCard.string(title);
-    this.subtitle = BaseCard.string(subtitle);
-    this.belongsToHero = this.shouldBelongToHero();
+    this.title = MarvelAllyCard.string(title);
+    this.subtitle = MarvelAllyCard.string(subtitle);
     this.media = {
-      backgroundImagePath: BaseCard.string(backgroundImagePath),
-      allyImagePath: BaseCard.string(allyImagePath),
-      splashIconPath: BaseCard.string(splashIconPath),
-    };
-    this.colors = {
-      primary: BaseCard.string(primaryColor),
-      secondary: BaseCard.string(secondaryColor),
-      splash: BaseCard.string(splashColor),
-      tertiary: BaseCard.string(tertiaryColor),
+      backgroundImagePath: MarvelAllyCard.string(backgroundImagePath),
+      allyImagePath: MarvelAllyCard.string(allyImagePath),
+      splashIconPath: MarvelAllyCard.string(splashIconPath),
     };
     this.stats = {
-      atk: BaseCard.number(atk),
-      atkConsequence: BaseCard.number(atkConsequence),
-      cost: BaseCard.number(cost),
-      health: BaseCard.number(health),
-      thw: BaseCard.number(thw),
+      atk: MarvelAllyCard.number(atk),
+      atkConsequence: MarvelAllyCard.number(atkConsequence),
+      cost: MarvelAllyCard.number(cost),
+      health: MarvelAllyCard.number(health),
+      thw: MarvelAllyCard.number(thw),
 
       // mental, energy, strength, wild
       // e.g. mental=2,energy=1
@@ -63,62 +46,13 @@ class MarvelAllyCard extends BaseCard {
           count: resourceAndType[1],
         };
       }),
-      thwConsequence: BaseCard.number(thwConsequence),
+      thwConsequence: MarvelAllyCard.number(thwConsequence),
     };
     this.text = {
-      attributes: BaseCard.string(attributes),
-      effect: BaseCard.string(effect),
-      flavorText: BaseCard.string(flavorText),
+      attributes: MarvelAllyCard.string(attributes),
+      effect: MarvelAllyCard.string(effect),
+      flavorText: MarvelAllyCard.string(flavorText),
     };
-    this.setColors();
-  }
-
-  shouldBelongToHero() {
-    const { setName } = this;
-
-    if (
-      setName === 'justice'
-      || setName === 'protection'
-      || setName === 'basic'
-      || setName === 'aggression'
-      || setName === 'leadership') {
-      return false;
-    }
-
-    return true;
-  }
-
-  setColors() {
-    const {
-      belongsToHero,
-      setName,
-    } = this;
-
-    if (belongsToHero) {
-      return;
-    }
-
-    if (setName === 'leadership') {
-      this.colors.primary = '#69b6ca';
-      this.colors.secondary = '#69b6ca';
-      this.colors.tertiary = '#69b6ca';
-    } else if (setName === 'justice') {
-      this.colors.primary = '#a89b40';
-      this.colors.secondary = '#a89b40';
-      this.colors.tertiary = '#a89b40';
-    } else if (setName === 'protection') {
-      this.colors.primary = '#7db455';
-      this.colors.secondary = '#7db455';
-      this.colors.tertiary = '#7db455';
-    } else if (setName === 'aggression') {
-      this.colors.primary = '#923130';
-      this.colors.secondary = '#923130';
-      this.colors.tertiary = '#923130';
-    } else {
-      this.colors.primary = '#a0a0a0';
-      this.colors.secondary = '#a0a0a0';
-      this.colors.tertiary = '#a0a0a0';
-    }
   }
 }
 

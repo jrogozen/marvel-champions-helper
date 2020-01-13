@@ -1,6 +1,6 @@
-const BaseCard = require('../baseCard');
+const BaseMarvelCard = require('./baseMarvelCard');
 
-class MarvelHeroCard extends BaseCard {
+class MarvelHeroCard extends BaseMarvelCard {
   constructor(args) {
     super(args);
 
@@ -14,41 +14,29 @@ class MarvelHeroCard extends BaseCard {
       handSize,
       heroImagePath,
       hitPoints,
-      primaryColor,
-      secondaryColor,
-      setName,
-      splashColor,
       splashIconPath,
-      tertiaryColor,
       thw,
       title,
     } = args;
 
     this.type = MarvelHeroCard.TYPE;
-    this.setName = BaseCard.string(setName);
-    this.title = BaseCard.string(title);
+    this.title = MarvelHeroCard.string(title);
     this.media = {
-      backgroundImagePath: BaseCard.string(backgroundImagePath),
-      heroImagePath: BaseCard.string(heroImagePath),
-      splashIconPath: BaseCard.string(splashIconPath),
-    };
-    this.colors = {
-      primary: BaseCard.string(primaryColor),
-      secondary: BaseCard.string(secondaryColor),
-      splash: BaseCard.string(splashColor),
-      tertiary: BaseCard.string(tertiaryColor),
+      backgroundImagePath: MarvelHeroCard.string(backgroundImagePath),
+      heroImagePath: MarvelHeroCard.string(heroImagePath),
+      splashIconPath: MarvelHeroCard.string(splashIconPath),
     };
     this.stats = {
-      atk: BaseCard.number(atk),
-      def: BaseCard.number(def),
-      handSize: BaseCard.number(handSize),
-      hitPoints: BaseCard.number(hitPoints),
-      thw: BaseCard.number(thw),
+      atk: MarvelHeroCard.number(atk),
+      def: MarvelHeroCard.number(def),
+      handSize: MarvelHeroCard.number(handSize),
+      hitPoints: MarvelHeroCard.number(hitPoints),
+      thw: MarvelHeroCard.number(thw),
     };
     this.text = {
-      attributes: BaseCard.string(attributes),
-      effect: BaseCard.string(effect),
-      flavorText: BaseCard.string(flavorText),
+      attributes: MarvelHeroCard.string(attributes),
+      effect: MarvelHeroCard.string(effect),
+      flavorText: MarvelHeroCard.string(flavorText),
     };
   }
 }

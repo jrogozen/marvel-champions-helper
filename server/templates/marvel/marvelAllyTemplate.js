@@ -1,7 +1,6 @@
 const appRootDir = require('app-root-dir');
 const path = require('path');
 
-const Canvas = require('../../utils/canvas');
 const MarvelBaseTemplate = require('./marvelBaseTemplate');
 
 class MarvelAllyTemplate extends MarvelBaseTemplate {
@@ -663,10 +662,6 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
       }
     }
   }
-
-  /**
-  todo: consequential damage
-   */
 
   async draw() {
     await this.drawBackgroundImage();
