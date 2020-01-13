@@ -24,7 +24,7 @@ class MarvelUpgradeTemplate extends MarvelBaseTemplate {
     });
   }
 
-  drawTopOverlay() {
+  drawOverlay() {
     const { canvas, card } = this;
     const { ctx } = canvas;
 
@@ -66,6 +66,18 @@ class MarvelUpgradeTemplate extends MarvelBaseTemplate {
       rotationDegree: -40,
       y: 170,
     });
+
+    ctx.beginPath();
+    ctx.lineWidth = 40;
+    ctx.moveTo(178, 116);
+    ctx.lineTo(222, 105);
+    ctx.lineTo(273, 90);
+    ctx.lineTo(341, 74);
+    ctx.lineTo(407, 59);
+    ctx.lineTo(496, 45);
+    // start of divider
+    ctx.stroke();
+    ctx.closePath();
 
     if (card.belongsToHero) {
       // // left
@@ -115,15 +127,25 @@ class MarvelUpgradeTemplate extends MarvelBaseTemplate {
       //   y: 0,
       // });
     } else {
-      // left corner
-      // ctx.beginPath();
-      // ctx.lineWidth = 4;
-      // ctx.moveTo(136, 30);
-      // ctx.lineTo(142, 0);
-      // ctx.stroke();
-      // ctx.lineTo(138, 30);
-      // ctx.stroke();
-      // ctx.closePath();
+      canvas.fillRect({
+        fillStyle: card.colors.primary,
+        height: 47,
+        width: 620,
+        x: 130,
+        y: 0,
+      });
+
+      ctx.beginPath();
+      ctx.lineWidth = 20;
+      // start at divider
+      ctx.moveTo(496, 55);
+      ctx.lineTo(538, 51);
+      ctx.lineTo(631, 42);
+      ctx.lineTo(687, 39);
+      ctx.lineTo(717, 38);
+      ctx.lineTo(749, 38);
+      ctx.stroke();
+      ctx.closePath();
 
       // // main rect
       // canvas.fillRect({
@@ -139,7 +161,7 @@ class MarvelUpgradeTemplate extends MarvelBaseTemplate {
   async draw() {
     await this.drawBackgroundImage();
 
-    this.drawTopOverlay();
+    this.drawOverlay();
     await this.drawTemplateTop();
   }
 }
