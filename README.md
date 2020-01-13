@@ -3,7 +3,7 @@
 #### heroes
 - [x] persona (hero)
 - [ ] persona (alter-ego)
-- [ ] ally
+- [x] ally
 - [ ] event
 - [ ] resource
 - [ ] support

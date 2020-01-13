@@ -255,6 +255,51 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     }
   }
 
+  async drawConsequences() {
+    const {
+      canvas,
+      card,
+    } = this;
+
+    const spaceBetweenSymbols = 5;
+    const middlePointOfBox = 85;
+    const thwTotalWidth = (this.templateImages.symbols.consequence.width + spaceBetweenSymbols)
+      * card.stats.thwConsequence;
+
+    let thwStartX = middlePointOfBox - (thwTotalWidth / 2);
+
+    for (let i = 0; i < card.stats.thwConsequence; i++) {
+      // eslint-disable-next-line no-await-in-loop
+      await canvas.insertImage({
+        height: this.templateImages.symbols.consequence.height,
+        path: this.templateImages.symbols.consequence.path,
+        width: this.templateImages.symbols.consequence.width,
+        x: thwStartX,
+        y: 335,
+      });
+
+      thwStartX += (this.templateImages.symbols.consequence.width + spaceBetweenSymbols);
+    }
+
+    const atkTotalWidth = (this.templateImages.symbols.consequence.width + spaceBetweenSymbols)
+      * card.stats.atkConsequence;
+
+    let atkStartX = middlePointOfBox - (atkTotalWidth / 2);
+
+    for (let i = 0; i < card.stats.atkConsequence; i++) {
+      // eslint-disable-next-line no-await-in-loop
+      await canvas.insertImage({
+        height: this.templateImages.symbols.consequence.height,
+        path: this.templateImages.symbols.consequence.path,
+        width: this.templateImages.symbols.consequence.width,
+        x: atkStartX,
+        y: 540,
+      });
+
+      atkStartX += (this.templateImages.symbols.consequence.width + spaceBetweenSymbols);
+    }
+  }
+
   drawStats() {
     const {
       canvas,
@@ -581,8 +626,46 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     }
   }
 
+  drawAuthor() {
+    const {
+      canvas,
+      card,
+    } = this;
+    const { ctx } = canvas;
+
+    ctx.font = '18.75px "Bravo SC"';
+    ctx.textAlign = 'right';
+    ctx.fillStyle = 'white';
+
+    if (card.belongsToHero) {
+      ctx.fillText(card.meta.author, 635, 1045);
+    } else {
+      ctx.fillText(card.meta.author, 732, 1045);
+    }
+  }
+
+  async drawResources() {
+    const { card } = this;
+
+    let startingY = 982;
+
+    for (let i = 0; i < card.stats.resources.length; i++) {
+      for (let j = 0; j < card.stats.resources[i].count; j++) {
+        // eslint-disable-next-line no-await-in-loop
+        await this.drawResourceTag({
+          x: 0,
+          y: startingY,
+          type: card.stats.resources[i].type,
+        });
+
+        // rotated height
+        startingY -= 41;
+      }
+    }
+  }
+
   /**
-  todo: consequential damage, cost
+  todo: consequential damage
    */
 
   async draw() {
@@ -599,6 +682,7 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     this.drawCost();
     this.drawHealth();
     this.drawStats();
+    await this.drawConsequences();
     this.drawAttributes();
     await this.drawTitle();
 
@@ -612,11 +696,11 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     });
 
     this.drawHeroBoxBorders();
-    // this.drawHandSizeAndHitpoints();
-    // this.drawAuthor();
+    this.drawAuthor();
     this.drawFlavorText(heightOfEffectText);
     this.drawSetNamePosition();
     await this.drawSplash();
+    await this.drawResources();
   }
 }
 

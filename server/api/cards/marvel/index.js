@@ -49,7 +49,7 @@ function generate(type) {
  * path:
  *  /api/v1/marvel-champions/cards/hero:
  *    post:
- *      summary: create a new marvel champions card
+ *      summary: create a new marvel champions hero card
  *      tags: [marvel-champions]
  *      requestBody:
  *        required: true
@@ -74,6 +74,34 @@ function generate(type) {
  */
 router.post('/hero', generate('hero'));
 
+/**
+ * @swagger
+ * path:
+ *  /api/v1/marvel-champions/cards/ally:
+ *    post:
+ *      summary: create a new marvel champions ally card
+ *      tags: [marvel-champions]
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#components/schemas/MarvelChampionsAllyCard'
+ *      responses:
+ *        200:
+ *          description: ok
+ *          content:
+ *            image/*:
+ *              schema:
+ *                type: string
+ *                format: binary
+ *        500:
+ *          description: not ok
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#components/schemas/ServerError'
+ */
 router.post('/ally', generate('ally'));
 
 module.exports = router;

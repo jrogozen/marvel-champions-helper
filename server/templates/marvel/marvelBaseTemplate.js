@@ -1,6 +1,7 @@
 const appRootDir = require('app-root-dir');
 const merge = require('lodash/merge');
 const path = require('path');
+const { loadImage } = require('canvas');
 
 const Canvas = require('../../utils/canvas');
 
@@ -19,6 +20,11 @@ class MarvelBaseTemplate {
     this.canvas = new Canvas({ width: this.width, height: this.height });
     this.templateImages = merge(templateImages, {
       symbols: {
+        consequence: {
+          height: 28,
+          path: path.resolve(appRootDir.get(), 'server/templates/marvel/images', 'symbol_consequence.png'),
+          width: 29,
+        },
         unique: {
           height: 37,
           path: path.resolve(appRootDir.get(), 'server/templates/marvel/images', 'symbol_unique.png'),
@@ -77,6 +83,23 @@ class MarvelBaseTemplate {
       x: 0,
       y: templateImages.top.height,
     });
+  }
+
+  async drawResourceTag({ x, y, type }) {
+    const { canvas } = this;
+    const { ctx } = canvas;
+
+    const width = 68;
+    const height = 52;
+    const radians = 7 * (Math.PI / 180);
+    const image = await loadImage(path.resolve(appRootDir.get(), `server/templates/marvel/images/resource_${type}_tag.png`));
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(radians);
+    ctx.translate(0, 0);
+    ctx.drawImage(image, 0, 0, width, height);
+    ctx.restore();
   }
 
   async drawSplash() {
