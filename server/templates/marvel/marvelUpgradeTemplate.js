@@ -26,134 +26,115 @@ class MarvelUpgradeTemplate extends MarvelBaseTemplate {
 
   drawOverlay() {
     const { canvas, card } = this;
+
+    // left side
+    canvas.fillCoordPath({
+      coords: '0,0,524,0,524,2,520,12,504,48,495,65,451,72,380,86,353,90,272,111,251,115,213,128,202,130,102,173,83,182,40,215,21,234,20,279,20,397,20,712,20,812,21,865,119,865,149,871,218,879,218,884,216,884,215,883,215,885,198,927,162,1012,151,1039,147,1050,0,1050',
+      fillStyle: card.colors.primary,
+    });
+
+    // top right
+    canvas.fillCoordPath({
+      coords: '750,0,750,47,680,49,629,52,588,54,521,62,521,60,545,13,550,0',
+      fillStyle: card.belongsToHero ? card.colors.secondary : card.colors.primary,
+    });
+
+    // bottom divider
+    canvas.fillCoordPath({
+      coords: '214,883,239,889,173,1050,147,1050,147,1048,154,1030,172,986,201,915',
+      fillStyle: card.belongsToHero ? card.colors.tertiary : card.colors.primary,
+    });
+
+    // top divider
+    canvas.fillCoordPath({
+      coords: '523,0,550,0,550,1,542,21,531,45,524,59,498,64,503,52,514,22',
+      fillStyle: card.belongsToHero ? card.colors.tertiary : card.colors.primary,
+    });
+
+    // bottom right
+    canvas.fillCoordPath({
+      coords: '489,753,750,753,750,1050,173,1050,173,1048,189,1008,225,923,236,896,239,884,246,884,310,888,359,889,387,889,488,884',
+      fillStyle: card.belongsToHero ? card.colors.secondary : card.colors.primary,
+    });
+  }
+
+  drawBorders() {
+    const { canvas, card } = this;
     const { ctx } = canvas;
 
-    ctx.strokeStyle = card.colors.primary;
-    ctx.lineWidth = 4;
-
-    // draw cost background
-    canvas.fillRect({
+    // bottom box, top left
+    canvas.fillCoordPath({
+      coords: '87,668,282,668,281,673,87,673',
       fillStyle: card.colors.primary,
-      height: 145,
-      width: 140,
-      rotationDegree: 11,
-      x: -14,
-      y: -15,
-    });
-
-    canvas.fillRect({
-      fillStyle: card.colors.primary,
-      height: 40,
-      width: 100,
-      x: 0,
-      y: 120,
-    });
-
-    // draw left stripe
-    canvas.fillRect({
-      fillStyle: card.colors.primary,
-      height: 875,
-      width: 50,
-      x: 0,
-      y: 175,
-    });
-
-    canvas.fillRect({
-      fillStyle: card.colors.primary,
-      height: 25,
-      width: 45,
-      x: 42,
-      rotationDegree: -40,
-      y: 170,
     });
 
     ctx.beginPath();
-    ctx.lineWidth = 40;
-    ctx.moveTo(178, 116);
-    ctx.lineTo(222, 105);
-    ctx.lineTo(273, 90);
-    ctx.lineTo(341, 74);
-    ctx.lineTo(407, 59);
-    ctx.lineTo(496, 45);
-    // start of divider
-    ctx.stroke();
+    ctx.fillStyle = card.belongsToHero ? card.colors.tertiary : card.colors.primary;
+    ctx.moveTo(280, 673);
+    ctx.lineTo(305, 673);
+    ctx.lineTo(306, 668);
+    ctx.lineTo(282, 668);
+    ctx.moveTo(280, 673);
+    ctx.fill();
     ctx.closePath();
 
-    if (card.belongsToHero) {
-      // // left
-      // canvas.fillRect({
-      //   fillStyle: card.colors.primary,
-      //   height: 74,
-      //   width: 372,
-      //   x: 140,
-      //   y: 0,
-      // });
+    canvas.fillCoordPath({
+      coords: '306,668,585,668,673,668,722,669,723,673,724,673,724,718,724,797,724,991,722,992,722,995,721,994,720,996,186,996,186,995,187,995,188,990,714,990,717,986,718,986,718,958,718,900,718,678,714,672,714,673,601,673,304,673,304,673',
+      fillStyle: card.colors.primary,
+    });
 
-      // // left diagnal
-      // canvas.fillRect({
-      //   fillStyle: card.colors.primary,
-      //   height: 125,
-      //   rotationDegree: 20,
-      //   width: 20,
-      //   x: 490,
-      //   y: -10,
-      // });
+    canvas.fillCoordPath({
+      coords: '188,996,159,996,159,995,161,994,162,990,191,990,191,991',
+      fillStyle: card.belongsToHero ? card.colors.tertiary : card.colors.primary,
+    });
 
-      // // divider
-      // canvas.fillRect({
-      //   fillStyle: card.colors.tertiary,
-      //   height: 125,
-      //   rotationDegree: 20,
-      //   width: 20,
-      //   x: 510,
-      //   y: -10,
-      // });
+    canvas.fillCoordPath({
+      coords: '26,877,32,877,32,986,36,989,36,990,74,990,165,990,163,996,30,996,30,994,28,995,26,967',
+      fillStyle: card.colors.primary,
+    });
 
-      // // right
-      // canvas.fillRect({
-      //   fillStyle: card.colors.secondary,
-      //   height: 125,
-      //   rotationDegree: 20,
-      //   width: 20,
-      //   x: 527,
-      //   y: 0,
-      // });
+    ctx.beginPath();
+    ctx.strokeStyle = card.colors.primary;
+    ctx.lineWidth = 4;
+    ctx.moveTo(12, 199);
+    ctx.lineTo(81, 207);
+    ctx.lineTo(84, 885);
+    ctx.lineTo(12, 869);
+    ctx.lineTo(12, 198);
+    ctx.stroke();
+    ctx.closePath();
+  }
 
-      // canvas.fillRect({
-      //   fillStyle: card.colors.secondary,
-      //   height: 74,
-      //   width: 400,
-      //   x: 550,
-      //   y: 0,
-      // });
-    } else {
-      canvas.fillRect({
-        fillStyle: card.colors.primary,
-        height: 47,
-        width: 620,
-        x: 130,
-        y: 0,
-      });
+  async drawTitle() {
+    const {
+      card,
+      canvas,
+      templateImages,
+    } = this;
+    const { ctx } = canvas;
+    const { unique } = card.stats;
 
-      ctx.beginPath();
-      ctx.lineWidth = 20;
-      // start at divider
-      ctx.moveTo(496, 55);
-      ctx.lineTo(538, 51);
-      ctx.lineTo(631, 42);
-      ctx.lineTo(687, 39);
-      ctx.lineTo(717, 38);
-      ctx.lineTo(749, 38);
-      ctx.stroke();
-      ctx.closePath();
+    const font = 'small-caps 30px "Arial"';
+    // const distanceBetweenSymbolAndFirstLetter = 5;
 
-      // // main rect
-      // canvas.fillRect({
-      //   fillStyle: card.colors.primary,
-      //   height: 74,
-      //   width: 650,
-      //   x: 140,
-      //   y: 0,
+    ctx.font = font;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'black';
+
+    // draw first char
+    ctx.fillText(
+      'WEB-SHOOTER',
+      10,
+      100,
+    );
+
+    if (unique) {
+      // await canvas.insertImage({
+      //   height: 37,
+      //   path: templateImages.symbols.unique.path,
+      //   width: templateImages.symbols.unique.width,
+      //   x: leftX,
+      //   y: 50,
       // });
     }
   }
@@ -163,6 +144,9 @@ class MarvelUpgradeTemplate extends MarvelBaseTemplate {
 
     this.drawOverlay();
     await this.drawTemplateTop();
+    this.drawBorders();
+    this.drawCost();
+    this.drawTitle();
   }
 }
 

@@ -16,6 +16,22 @@ class Model {
 
     return Number(val);
   }
+
+  static boolean(val) {
+    if (isUndefined(val)) {
+      return false;
+    }
+
+    if (String.isString(val) && val === 'false') {
+      return false;
+    }
+
+    if (String.isString(val) && val === 'true') {
+      return true;
+    }
+
+    return Boolean(val);
+  }
 }
 
 module.exports = Model;

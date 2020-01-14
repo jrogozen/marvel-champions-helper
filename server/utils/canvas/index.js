@@ -143,6 +143,29 @@ class Canvas {
     ctx.fillText(text, x, y);
   }
 
+  fillCoordPath({
+    coords,
+    fillStyle,
+  }) {
+    const { ctx } = this;
+    const ca = coords.split(',');
+
+    ctx.fillStyle = fillStyle;
+    ctx.lineWidth = 1;
+
+    ctx.beginPath();
+    ctx.moveTo(ca[0], ca[1]);
+
+    for (let i = 2; i < ca.length; i += 2) {
+      ctx.lineTo(ca[i], ca[i + 1]);
+    }
+
+    ctx.lineTo(ca[0], ca[1]);
+
+    ctx.fill();
+    ctx.closePath();
+  }
+
   fillRect({
     fillStyle,
     height,

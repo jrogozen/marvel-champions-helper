@@ -17,6 +17,7 @@ class MarvelUpgradeCard extends BaseMarvelCard {
       splashIconPath,
       tertiaryColor,
       title,
+      unique,
     } = args;
 
     this.type = MarvelUpgradeCard.TYPE;
@@ -40,6 +41,7 @@ class MarvelUpgradeCard extends BaseMarvelCard {
           count: resourceAndType[1],
         };
       }),
+      unique: MarvelUpgradeCard.boolean(unique),
     };
     this.text = {
       attributes: MarvelUpgradeCard.string(attributes),

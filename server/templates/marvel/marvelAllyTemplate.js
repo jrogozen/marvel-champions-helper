@@ -576,22 +576,6 @@ class MarvelAllyTemplate extends MarvelBaseTemplate {
     });
   }
 
-  drawCost() {
-    const { canvas, card } = this;
-    const { ctx } = canvas;
-
-    ctx.font = '92px "Comic Book"';
-    ctx.textAlign = 'center';
-
-    canvas.fillShadowText({
-      text: MarvelAllyTemplate.formatStatValue(card.stats.cost),
-      x: 64,
-      y: 100,
-      shadowXDiff: 6,
-      shadowYDiff: 5,
-    });
-  }
-
   async drawAllyImage() {
     const {
       canvas,
