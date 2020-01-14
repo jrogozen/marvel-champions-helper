@@ -28,5 +28,6 @@ module.exports = {
     "prefer-arrow-callback": ["error", { "allowNamedFunctions": true }],
     "no-param-reassign": [0],
     "no-plusplus": [0],
+    "react/jsx-filename-extension": [0],
   },
 };

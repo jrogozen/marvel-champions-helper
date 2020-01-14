@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable global-require */
 const express = require('express');
 
 
@@ -13,12 +15,28 @@ const useSwagger = require('./middleware/swagger');
 const marvelCardsApi = require('./api/cards/marvel');
 
 const app = express();
+const compileClient = process.env !== 'production';
 
 useRequestParsers(app);
 setRequestId(app);
 secureRequest(app);
 useHttpLogger(app);
 useSwagger(app);
+
+if (compileClient) {
+  const config = require('../tools/build/webpack.config.js');
+  const webpack = require('webpack');
+  const webpackDevMiddleware = require('webpack-dev-middleware');
+  const webpackHotMiddleware = require('webpack-hot-middleware');
+
+  const compiler = webpack(config);
+
+  app.use(webpackDevMiddleware(compiler, {
+    publicPath: config.output.publicPath,
+    logLevel: 'warn',
+  }));
+  app.use(webpackHotMiddleware(compiler));
+}
 
 app.use('/api/v1/marvel-champions/cards', marvelCardsApi);
 
