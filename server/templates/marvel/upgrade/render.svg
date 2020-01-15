@@ -4,9 +4,9 @@
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 180 252"
 	 style="enable-background:new 0 0 180 252;" xml:space="preserve">
 <style type="text/css">
-	.primary{fill:#ba06e0;}
-  .secondary{fill:#24d061;}
-  .tertiary{fill:#76c4cb;}
+	<!-- .primary{fill:#ba06e0;} -->
+  <!-- .secondary{fill:#24d061;} -->
+  <!-- .tertiary{fill:#76c4cb;} -->
   .dots{fill:#000; fill-opacity: 0.2;}
 	.st1{fill:#E6E4E4;}
 	.st3{fill:#010101;}

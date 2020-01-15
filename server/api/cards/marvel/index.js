@@ -6,7 +6,7 @@ const MarvelAllyTemplate = require('../../../templates/marvel/marvelAllyTemplate
 const MarvelHeroCard = require('../../../models/cards/marvel/marvelHeroCard');
 const MarvelHeroTemplate = require('../../../templates/marvel/marvelHeroTemplate');
 const MarvelUpgradeCard = require('../../../models/cards/marvel/marvelUpgradeCard');
-const MarvelUpgradeTemplate = require('../../../templates/marvel/marvelUpgradeTemplate');
+const MarvelUpgradeTemplate = require('../../../templates/marvel/upgrade');
 
 const router = express.Router();
 
@@ -25,24 +25,47 @@ const templateMap = {
   },
 };
 
+function writeHeaderType(format, res) {
+  if (format === 'svg') {
+    res.writeHead(200, {
+      'Content-Type': 'image/svg+xml',
+    });
+  } else {
+    res.writeHead(200, {
+      'Content-Type': 'image/png',
+    });
+  }
+}
+
 function generate(type) {
   return async (req, res, next) => {
     try {
+      const { format } = req.query;
       const card = new templateMap[type].card(req.body);
       const template = new templateMap[type].template({ card });
 
-      await template.draw();
+      writeHeaderType(format, res);
 
-      template.canvas.canvas.toBuffer((err, buf) => {
-        if (err) throw err;
+      if (type === 'upgrade') {
+        await template.render();
 
-        res.writeHead(200, {
-          'Content-Type': 'image/png',
-          'Content-Length': buf.length,
+        if (format === 'svg') {
+          res.write(template.canvas.svg());
+        } else {
+          const png = await template.renderPng();
+          res.write(png);
+        }
+
+        res.end();
+      } else {
+        await template.draw();
+
+        template.canvas.canvas.toBuffer((err, buf) => {
+          if (err) throw err;
+
+          res.end(buf);
         });
-
-        res.end(buf);
-      });
+      }
     } catch (error) {
       next(error);
     }
